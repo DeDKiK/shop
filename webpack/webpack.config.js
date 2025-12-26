@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { css } = require("webpack");
 
 module.exports = {
   entry: "./src/index.tsx",
@@ -23,10 +24,34 @@ module.exports = {
         ],
         exclude: /node_modules/,
       },
+      {
+        test: /\.css$/i,
+        exclude: /\.module\.css$/,
+        use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.module\.css$/i,
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: { modules: true, esModule: false },
+          },
+        ],
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg|ico)$/i,
+        type: "asset/resource",
+      },
+      {
+        test: /\.json$/,
+        type: "json",
+      },
     ],
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js"],
+    extensions: [".tsx", ".ts", ".js", ".css"],
+    modules: [path.resolve(__dirname, "src"), "node_modules"],
   },
   devServer: {
     static: "./dist",

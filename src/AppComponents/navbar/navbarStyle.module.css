@@ -1,0 +1,46 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 10px 0;
+  border-bottom: 1px solid #00ca65;
+
+  /* gap: 15px; */
+}
+
+.navleft {
+  display: flex;
+  gap: 15px;
+  margin-left: 100px;
+}
+.navRight {
+  display: flex;
+  gap: 15px;
+  margin-right: 100px;
+}
+.navbar button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 10px 20px;
+}
+
+.navbar button:hover {
+  background-color: #00ca65;
+  opacity: 0.8;
+}
+
+.navSearch input[type="search"] {
+  padding: 10px 0px;
+  justify-content: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 100px;
+  width: 800px;
+}
+.navbar input[type="search"]:focus {
+  border-color: #00ca65;
+  outline: none;
+}
