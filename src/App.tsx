@@ -1,12 +1,15 @@
-import { BrowserRouter, Routes } from "react-router-dom";
-import navbar from "./AppComponents/navbar/navbar";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navbar from "./AppComponents/navbar/navbar";
+import ItemCard from "./AppComponents/itemCard/itemCard";
 
 function App() {
   return (
     <>
-      <div>{navbar()}</div>
+      <div>{Navbar()}</div>
       <BrowserRouter>
-        <Routes></Routes>
+        <Routes>
+          <Route path="/" element={<ItemCard />} />
+        </Routes>
       </BrowserRouter>
     </>
   );

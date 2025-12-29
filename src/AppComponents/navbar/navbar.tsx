@@ -1,6 +1,6 @@
 import styles from "./navbarStyle.module.css";
 
-function navbar() {
+function Navbar() {
   return (
     <div className={styles.navbar}>
       <div className={styles.navleft}>
@@ -20,4 +20,4 @@ function navbar() {
   );
 }
 
-export default navbar;
+export default Navbar;
