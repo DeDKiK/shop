@@ -1,0 +1,28 @@
+.itemCard {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.item {
+  border: 1px solid #00ca65;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 10px;
+  width: 200px;
+  height: 250px;
+  text-align: center;
+}
+
+.item img {
+  width: 100%;
+  max-width: 153.25px;
+  height: 153.25px;
+}
+
+.item p {
+  margin-top: 10px;
+  font-size: 16px;
+  text-align: left;
+}
