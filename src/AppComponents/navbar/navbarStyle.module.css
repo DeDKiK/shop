@@ -5,42 +5,57 @@
   background: #fff;
   padding: 10px 0;
   border-bottom: 1px solid #00ca65;
-
-  /* gap: 15px; */
 }
 
+/* LEFT */
 .navleft {
   display: flex;
   gap: 15px;
   margin-left: 100px;
 }
+
+/* RIGHT */
 .navRight {
   display: flex;
   gap: 15px;
   margin-right: 100px;
 }
-.navbar button {
+
+/* LINK STYLE */
+.navItem {
   background: none;
   border: none;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
   padding: 10px 20px;
+
+  text-decoration: none; /*Link */
+  color: inherit; /*Link */
+  font-family: "Arial", sans-serif;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.navbar button:hover {
+.navItem:hover {
   background-color: #00ca65;
   opacity: 0.8;
+  color: white;
+  transform: scale(1.05);
+  transition: all 0.3s ease;
 }
 
+/* SEARCH */
 .navSearch input[type="search"] {
-  padding: 10px 0px;
-  justify-content: center;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   margin-right: 100px;
   width: 800px;
 }
+
 .navbar input[type="search"]:focus {
   border-color: #00ca65;
   outline: none;

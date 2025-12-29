@@ -1,16 +1,18 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./AppComponents/navbar/navbar";
-import ItemCard from "./AppComponents/itemCard/itemCard";
+import Home from "./pages/HomePage/HomePage";
+import LoginPage from "./pages/LoginPage/Login";
+import "./style.css";
 
 function App() {
   return (
     <>
-      <div>{Navbar()}</div>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<ItemCard />} />
-        </Routes>
-      </BrowserRouter>
+      <Navbar />
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
     </>
   );
 }
