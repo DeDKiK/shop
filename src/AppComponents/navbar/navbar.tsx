@@ -15,7 +15,7 @@ function Navbar() {
               Electronics
             </Link>
             <Link to="/category/jewelery" className={styles.dropdownItem}>
-              Jewelery
+              Clothes
             </Link>
           </div>
         </div>
