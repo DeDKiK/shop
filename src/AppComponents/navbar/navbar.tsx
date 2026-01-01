@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
 import styles from "./navbarStyle.module.css";
+import { useCart } from "../../context/cartContext";
+import { spawn } from "node:child_process";
 
 function Navbar() {
+  const { cartCount } = useCart();
+
   return (
     <div className={styles.navbar}>
       <div className={styles.navleft}>
@@ -28,6 +32,9 @@ function Navbar() {
       <div className={styles.navRight}>
         <Link to="/" className={styles.navItem}>
           Cart
+          {cartCount > 0 && (
+            <span className={styles.cartBadge}>{cartCount}</span>
+          )}
         </Link>
 
         <Link to="/login" className={styles.navItem}>

@@ -26,3 +26,18 @@
   font-size: 16px;
   text-align: left;
 }
+
+.item button {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: white;
+  border: 1px solid #00ca65;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.item button:hover {
+  background-color: #00ca65;
+  color: white;
+  transition: all 0.3s ease;
+}
