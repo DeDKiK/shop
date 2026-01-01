@@ -43,7 +43,7 @@
   background-color: #00ca65;
   opacity: 0.8;
   color: white;
-  transform: scale(1.05);
+  /* transform: scale(1.05); */
   transition: all 0.3s ease;
 }
 
@@ -59,4 +59,34 @@
 .navbar input[type="search"]:focus {
   border-color: #00ca65;
   outline: none;
+}
+
+.dropdownCategory {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdownContent {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+.dropdownContent a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+.dropdownContent a:hover {
+  background-color: #00ca65;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.dropdownCategory:hover .dropdownContent {
+  display: block;
+  transition: all 0.3s ease;
 }

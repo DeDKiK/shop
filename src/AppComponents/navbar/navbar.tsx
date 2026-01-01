@@ -8,9 +8,17 @@ function Navbar() {
         <Link to="/" className={styles.navItem}>
           Home
         </Link>
-        <Link to="/" className={styles.navItem}>
-          Category
-        </Link>
+        <div className={styles.dropdownCategory}>
+          <button className={styles.navItem}>Categories</button>
+          <div className={styles.dropdownContent}>
+            <Link to="/category/electronics" className={styles.dropdownItem}>
+              Electronics
+            </Link>
+            <Link to="/category/jewelery" className={styles.dropdownItem}>
+              Clothes
+            </Link>
+          </div>
+        </div>
       </div>
 
       <div className={styles.navSearch}>
