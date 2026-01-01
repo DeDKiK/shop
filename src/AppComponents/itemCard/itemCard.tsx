@@ -6,41 +6,29 @@ import simpleHatAsset from "../../assets/simpleHat.jpg";
 import fancyHatAsset from "../../assets/fancyHat.jpg";
 import pantsAsset from "../../assets/pants.jpg";
 import sweaterAsset from "../../assets/sweater.jpg";
+import { useCart } from "../../context/cartContext";
 
 function ItemCard() {
+  const { addToCart } = useCart();
+  const items = [
+    { src: socksAsset, alt: "Socks", name: "Socks" },
+    { src: tShirtAsset, alt: "T-Shirt", name: "T-Shirt" },
+    { src: bomberAsset, alt: "Bomber Jacket", name: "Bomber Jacket" },
+    { src: simpleHatAsset, alt: "Simple Hat", name: "Simple Hat" },
+    { src: fancyHatAsset, alt: "Fancy Hat", name: "Fancy Hat" },
+    { src: pantsAsset, alt: "Pants", name: "Pants" },
+    { src: sweaterAsset, alt: "Sweater", name: "Sweater" },
+  ];
   return (
-    <>
-      <div className={styles.itemCard}>
-        <div className={styles.item}>
-          <img src={socksAsset} alt="Socks" />
-          <p>Socks</p>
+    <div className={styles.itemCard}>
+      {items.map((item) => (
+        <div key={item.alt} className={styles.item}>
+          <img src={item.src} alt={item.alt} />
+          <p>{item.name}</p>
+          <button onClick={addToCart}>Add to Cart</button>
         </div>
-        <div className={styles.item}>
-          <img src={tShirtAsset} alt="T-Shirt" />
-          <p>T-Shirt</p>
-        </div>
-        <div className={styles.item}>
-          <img src={bomberAsset} alt="Bomber Jacket" />
-          <p>Bomber Jacket</p>
-        </div>
-        <div className={styles.item}>
-          <img src={simpleHatAsset} alt="Simple Hat" />
-          <p>Simple Hat</p>
-        </div>
-        <div className={styles.item}>
-          <img src={fancyHatAsset} alt="Fancy Hat" />
-          <p>Fancy Hat</p>
-        </div>
-        <div className={styles.item}>
-          <img src={pantsAsset} alt="Pants" />
-          <p>Pants</p>
-        </div>
-        <div className={styles.item}>
-          <img src={sweaterAsset} alt="Sweater" />
-          <p>Sweater</p>
-        </div>
-      </div>
-    </>
+      ))}
+    </div>
   );
 }
 export default ItemCard;
