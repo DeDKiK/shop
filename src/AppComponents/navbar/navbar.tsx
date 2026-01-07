@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 import styles from "./navbarStyle.module.css";
 import { useCart } from "../../context/cartContext";
-import { spawn } from "node:child_process";
 
 function Navbar() {
-  const { cartCount } = useCart();
+  const { totalItems } = useCart();
 
   return (
     <div className={styles.navbar}>
@@ -30,10 +29,10 @@ function Navbar() {
       </div>
 
       <div className={styles.navRight}>
-        <Link to="/" className={styles.navItem}>
+        <Link to="/cart" className={styles.navItem}>
           Cart
-          {cartCount > 0 && (
-            <span className={styles.cartBadge}>{cartCount}</span>
+          {totalItems > 0 && (
+            <span className={styles.cartBadge}>{totalItems}</span>
           )}
         </Link>
 
