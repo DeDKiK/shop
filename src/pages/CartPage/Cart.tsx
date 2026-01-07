@@ -1,3 +1,4 @@
+import styles from "./CartStyle.module.css";
 import { useCart } from "../../context/cartContext";
 
 function CartPage() {
@@ -10,13 +11,16 @@ function CartPage() {
       {items.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
-        <ul>
-          {items.map((item, index) => (
-            <li key={item.id}>
-              {item.name} - {item.quantity}
-            </li>
+        <div className={styles.cartCard}>
+          {items.map((item) => (
+            <div className={styles.cartItem}>
+              <img src={item.src} alt={item.name} />
+              <p key={item.id}>
+                {item.name} - {item.quantity}
+              </p>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
