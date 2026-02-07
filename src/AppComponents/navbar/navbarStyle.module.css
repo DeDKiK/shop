@@ -3,22 +3,15 @@
   justify-content: space-between;
   align-items: center;
   background: #fff;
-  padding: 10px 0;
+  padding: 10px 20px;
   border-bottom: 1px solid #00ca65;
 }
 
-/* LEFT */
-.navleft {
-  display: flex;
-  gap: 15px;
-  margin-left: 100px;
-}
-
-/* RIGHT */
+.navleft,
 .navRight {
   display: flex;
   gap: 15px;
-  margin-right: 100px;
+  align-items: center;
 }
 
 /* LINK STYLE */
@@ -30,8 +23,8 @@
   cursor: pointer;
   padding: 10px 20px;
 
-  text-decoration: none; /*Link */
-  color: inherit; /*Link */
+  text-decoration: none;
+  color: inherit;
   font-family: "Arial", sans-serif;
 
   display: inline-flex;
@@ -48,12 +41,20 @@
 }
 
 /* SEARCH */
+.navSearch {
+  flex: 1;
+  min-width: 180px;
+  max-width: 1000px;
+  display: flex;
+}
+
 .navSearch input[type="search"] {
+  width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-right: 100px;
-  width: 800px;
+  /* margin-right: 100px; */
+  flex: 1;
 }
 
 .navbar input[type="search"]:focus {
