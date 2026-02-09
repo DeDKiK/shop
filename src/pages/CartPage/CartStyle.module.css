@@ -1,5 +1,6 @@
 .cartCard .cartItem {
   display: flex;
+  flex-direction: column;
   padding: 20px;
   border: 2px solid #00ca65;
   border-radius: 10px;

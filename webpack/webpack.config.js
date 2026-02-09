@@ -53,10 +53,13 @@ module.exports = {
     modules: [path.resolve(__dirname, "src"), "node_modules"],
   },
   devServer: {
-    static: "./dist",
+    static: "./build",
     historyApiFallback: true,
     port: 8080,
     hot: true,
+    client: {
+      overlay: true,
+    },
   },
   mode: "development",
 };
