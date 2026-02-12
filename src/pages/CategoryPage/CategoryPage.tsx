@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { items } from "../../AppComponents/items";
 import ItemCard from "../../AppComponents/itemCard/itemCard";
+import styles from "../HomePage/homePageStyle.module.css";
 
 export default function categoryPage() {
   const { category } = useParams<{ category: string }>();
@@ -9,13 +10,6 @@ export default function categoryPage() {
     (item) => item.category.toLowerCase() === category?.toLowerCase(),
   );
 
-  console.log("Параметр з URL:", category);
-  console.log("Всі категорії в масиві:");
-  items.forEach((item) => {
-    console.log(`- ${item.name} → "${item.category}"`);
-  });
-  console.log("Фільтровані товари:", filteredItems);
-
   return (
     <div>
       <h1>{category}</h1>
@@ -23,7 +17,7 @@ export default function categoryPage() {
       {filteredItems.length === 0 ? (
         <p>No Items in this category</p>
       ) : (
-        <div>
+        <div className={styles.itemsContainer}>
           {filteredItems.map((item) => (
             <ItemCard key={item.id} item={item} />
           ))}

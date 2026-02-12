@@ -1,6 +1,5 @@
 import styles from "./itemCardStyle.module.css";
 import { useCart } from "../../context/cartContext";
-import { items } from "../items";
 
 interface Item {
   id: string;
@@ -16,25 +15,21 @@ interface IitemCardProps {
 function ItemCard({ item }: IitemCardProps) {
   const { addToCart } = useCart();
   return (
-    <div className={styles.itemCard}>
-      {items.map((item) => (
-        <div key={item.id} className={styles.item}>
-          <img src={item.src} alt={item.alt} />
-          <p>{item.name}</p>
-          <button
-            onClick={() =>
-              addToCart({
-                id: item.id,
-                name: item.name,
-                src: item.src,
-                quantity: 1,
-              })
-            }
-          >
-            Add to Cart
-          </button>
-        </div>
-      ))}
+    <div key={item.id} className={styles.item}>
+      <img src={item.src} alt={item.alt} />
+      <p>{item.name}</p>
+      <button
+        onClick={() =>
+          addToCart({
+            id: item.id,
+            name: item.name,
+            src: item.src,
+            quantity: 1,
+          })
+        }
+      >
+        Add to Cart
+      </button>
     </div>
   );
 }
