@@ -21,3 +21,13 @@ declare module "*.jpg" {
   const value: string;
   export default value;
 }
+
+declare module "../../data/items" {
+  export interface Item {
+    src: string;
+    alt: string;
+    name: string;
+    id: string;
+    category: string;
+  }
+}

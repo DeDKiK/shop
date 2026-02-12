@@ -16,8 +16,8 @@ function CartPage() {
               <img src={item.src} alt={item.name} />
               <p>
                 {item.name} - {item.quantity}
-                <button onClick={() => deleteItem(item.id)}>Delete</button>
               </p>
+              <button onClick={() => deleteItem(item.id)}>Delete</button>
             </div>
           ))}
         </div>
