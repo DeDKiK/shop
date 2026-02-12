@@ -1,30 +1,63 @@
-.cartCard .cartItem {
-  display: flex;
-  flex-direction: column;
+.cartContainer {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px;
-  border: 2px solid #00ca65;
-  border-radius: 10px;
-  max-width: 500px;
+}
+
+.cartContent {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.cartLeft {
+  flex: 3;
+  min-width: 300px;
+}
+
+.cartRight {
+  flex: 1;
+  min-width: 280px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+}
+
+.cartItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid #eee;
 }
 
 .cartItem img {
-  width: 153.25px;
-  height: 153.25px;
-  margin-right: 10px;
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 6px;
 }
 
-.cartItem p {
-  font-size: 18px;
-  margin-bottom: 10px;
+.itemInfo {
+  flex: 1;
 }
 
-.cartItem button {
-  background-color: #ff4d4d;
+.checkoutBtn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 16px;
+  background: #00ca65;
   color: white;
   border: none;
-  padding: 10px 20px;
-  width: 100px;
-  height: 30px;
-  border-radius: 5px;
+  border-radius: 6px;
+  font-weight: bold;
   cursor: pointer;
+}
+
+.checkoutBtn:hover {
+  background: #00b359;
 }
