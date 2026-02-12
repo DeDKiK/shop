@@ -13,6 +13,7 @@ export interface Item {
   name: string;
   id: string;
   category: string;
+  price: string;
 }
 
 export const items: Item[] = [
@@ -22,6 +23,7 @@ export const items: Item[] = [
     name: "Socks",
     id: "Socks",
     category: "Clothes",
+    price: "5.99",
   },
   {
     src: tShirtAsset,
@@ -29,6 +31,7 @@ export const items: Item[] = [
     name: "T-Shirt",
     id: "T-Shirt",
     category: "Clothes",
+    price: "13.99",
   },
   {
     src: bomberAsset,
@@ -36,6 +39,7 @@ export const items: Item[] = [
     name: "Bomber Jacket",
     id: "Bomber Jacket",
     category: "Clothes",
+    price: "15.99",
   },
   {
     src: simpleHatAsset,
@@ -43,6 +47,7 @@ export const items: Item[] = [
     name: "Simple Hat",
     id: "Simple Hat",
     category: "Clothes",
+    price: "19.99",
   },
   {
     src: fancyHatAsset,
@@ -50,6 +55,7 @@ export const items: Item[] = [
     name: "Fancy Hat",
     id: "Fancy Hat",
     category: "Clothes",
+    price: "8.99",
   },
   {
     src: pantsAsset,
@@ -57,6 +63,7 @@ export const items: Item[] = [
     name: "Pants",
     id: "Pants",
     category: "Clothes",
+    price: "6.99",
   },
   {
     src: sweaterAsset,
@@ -64,6 +71,7 @@ export const items: Item[] = [
     name: "Sweater",
     id: "Sweater",
     category: "Clothes",
+    price: "4.99",
   },
   {
     src: IphoneAsset,
@@ -71,5 +79,6 @@ export const items: Item[] = [
     name: "Iphone 17",
     id: "Iphone 17",
     category: "Electronics",
+    price: "59.99",
   },
 ];

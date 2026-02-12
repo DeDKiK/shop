@@ -6,6 +6,7 @@ interface Item {
   name: string;
   src: string;
   alt: string;
+  price: string;
 }
 
 interface IitemCardProps {
@@ -17,7 +18,9 @@ function ItemCard({ item }: IitemCardProps) {
   return (
     <div key={item.id} className={styles.item}>
       <img src={item.src} alt={item.alt} />
-      <p>{item.name}</p>
+      <p>
+        {item.name} - {item.price}$
+      </p>
       <button
         onClick={() =>
           addToCart({
@@ -25,6 +28,7 @@ function ItemCard({ item }: IitemCardProps) {
             name: item.name,
             src: item.src,
             quantity: 1,
+            price: item.price,
           })
         }
       >

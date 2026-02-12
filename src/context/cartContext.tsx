@@ -11,6 +11,7 @@ interface CartItem {
   name: string;
   quantity: number;
   src: string;
+  price: string;
 }
 
 interface CartContextType {
