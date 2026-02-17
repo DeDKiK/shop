@@ -17,7 +17,6 @@ function LoginPage() {
             Password:
             <input type="password" id="password" name="password" required />
           </label>
-
           {/* <button type="submit">Submit</button> */}
         </form>
       </div>
