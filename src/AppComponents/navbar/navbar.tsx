@@ -38,7 +38,7 @@ function Navbar() {
       </div>
 
       <div className={styles.navSearch}>
-        <form onSubmit={handleSearch}>
+        <form className={styles.navSearchForm} onSubmit={handleSearch}>
           <input
             type="search"
             value={searchValue}

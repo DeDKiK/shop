@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { items } from "../../AppComponents/items";
 import ItemCard from "../../AppComponents/itemCard/itemCard";
+import styles from "../HomePage/homePageStyle.module.css";
 
 function searchPage() {
   const [searchParams] = useSearchParams();
@@ -20,7 +21,11 @@ function searchPage() {
         {foundItems.length === 0 ? (
           <p>No items found for "{decoded}"</p>
         ) : (
-          foundItems.map((item) => <ItemCard key={item.id} item={item} />)
+          <div className={styles.itemsContainer}>
+            {foundItems.map((item) => (
+              <ItemCard key={item.id} item={item} />
+            ))}
+          </div>
         )}
       </div>
     </div>
