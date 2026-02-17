@@ -61,3 +61,20 @@
 .checkoutBtn:hover {
   background: #00b359;
 }
+
+.deleteBtn {
+  background: transparent;
+  border: 1px solid #ff0000;
+  color: black;
+  width: 80px;
+  height: 25px;
+  border-radius: 5px;
+}
+
+.deleteBtn:hover {
+  background-color: #ff0000;
+  border: none;
+  cursor: pointer;
+  color: white;
+  transition: all 0.2s ease;
+}

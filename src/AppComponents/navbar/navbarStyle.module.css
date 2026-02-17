@@ -36,8 +36,7 @@
   background-color: #00ca65;
   opacity: 0.8;
   color: white;
-  /* transform: scale(1.05); */
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 /* SEARCH */

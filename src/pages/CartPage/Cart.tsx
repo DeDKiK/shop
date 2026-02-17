@@ -28,8 +28,13 @@ function CartPage() {
                   <p>
                     {item.name} x {item.quantity}
                   </p>
-                  <p>{item.price}$</p>
-                  <button onClick={() => deleteItem(item.id)}>Delete</button>
+                  <p>${item.price}</p>
+                  <button
+                    className={styles.deleteBtn}
+                    onClick={() => deleteItem(item.id)}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             ))}
