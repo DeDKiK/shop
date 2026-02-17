@@ -40,14 +40,14 @@
 }
 
 /* SEARCH */
-.navSearch {
+.navSearch form {
   flex: 1;
   min-width: 180px;
   max-width: 1000px;
   display: flex;
 }
 
-.navSearch input[type="search"] {
+.navSearch > form > input[type="search"] {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;

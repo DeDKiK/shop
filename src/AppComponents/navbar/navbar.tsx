@@ -1,8 +1,21 @@
-import { Link } from "react-router-dom";
-import styles from "./navbarStyle.module.css";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/cartContext";
+import { items } from "../../AppComponents/items";
+import styles from "./navbarStyle.module.css";
 
 function Navbar() {
+  const [searchValue, setSearchValue] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchValue.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchValue.trim())}`);
+      setSearchValue("");
+    }
+  };
+
   const { totalItems } = useCart();
 
   return (
@@ -25,7 +38,16 @@ function Navbar() {
       </div>
 
       <div className={styles.navSearch}>
-        <input type="search" />
+        <form onSubmit={handleSearch}>
+          <input
+            type="search"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSearch(e);
+            }}
+          />
+        </form>
       </div>
 
       <div className={styles.navRight}>
