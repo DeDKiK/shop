@@ -40,27 +40,34 @@
 }
 
 /* SEARCH */
-.navSearch form {
+
+.navSearch {
   flex: 1;
   min-width: 180px;
   max-width: 1000px;
   display: flex;
 }
 
-.navSearch > form > input[type="search"] {
+.navSearchForm {
+  flex: 1;
+  min-width: 180px;
+  max-width: 1000px;
+  display: flex;
+}
+.navSearch input {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  /* margin-right: 100px; */
   flex: 1;
 }
 
-.navbar input[type="search"]:focus {
+.navbar input:focus {
   border-color: #00ca65;
   outline: none;
 }
 
+/* DROPDOWN */
 .dropdownCategory {
   position: relative;
   display: inline-block;

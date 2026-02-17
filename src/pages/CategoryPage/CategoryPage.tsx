@@ -15,7 +15,7 @@ export default function categoryPage() {
       <h1>{category}</h1>
 
       {filteredItems.length === 0 ? (
-        <p>No Items in this category</p>
+        <p>No Items in {category}</p>
       ) : (
         <div className={styles.itemsContainer}>
           {filteredItems.map((item) => (
