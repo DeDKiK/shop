@@ -14,10 +14,11 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/category/:category" element={<CategoryPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/cart" element={<CartPage />} />
-        <Route path="/search/" element={<SearchPage />} />
+        <Route path="/search" element={<SearchPage />} />
       </Routes>
     </>
   );

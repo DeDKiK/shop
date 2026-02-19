@@ -21,7 +21,7 @@ function Navbar() {
   return (
     <div className={styles.navbar}>
       <div className={styles.navleft}>
-        <Link to="/" className={styles.navItem}>
+        <Link to="/home" className={styles.navItem}>
           Home
         </Link>
         <div className={styles.dropdownCategory}>
