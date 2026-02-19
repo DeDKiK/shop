@@ -9,7 +9,7 @@ module.exports = (env, argv) => {
     output: {
       filename: "bundle.js",
       path: path.resolve(__dirname, "../dist"),
-      publicPath: "./",
+      publicPath: isProduction ? "./" : "/",
       clean: true,
     },
     plugins: [
@@ -59,13 +59,17 @@ module.exports = (env, argv) => {
     },
     devServer: {
       static: false,
-      historyApiFallback: true,
+      historyApiFallback: {
+        index: "/index.html",
+        disableDotRule: true,
+      },
       port: 8080,
       hot: true,
       client: {
         overlay: true,
       },
       open: true,
+      allowedHosts: "all",
     },
     mode: isProduction ? "production" : "development",
     devtool: isProduction ? false : "cheap-module-source-map",
