@@ -19,7 +19,7 @@ Built as a learning / portfolio project.
 - React 18  
 - TypeScript  
 - Webpack + Babel  
-- CSS (vanilla / modules)
+- CSS
 
 ## How to run locally
 
