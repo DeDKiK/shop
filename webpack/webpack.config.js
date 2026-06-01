@@ -1,6 +1,8 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
+process.setMaxListeners(30);
+
 module.exports = (env, argv) => {
   const isProduction = argv.mode === "production";
 
