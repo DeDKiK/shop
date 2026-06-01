@@ -213,22 +213,6 @@ docker compose down -v
 docker compose up --build
 ```
 
-## Contributing
-
-Feel free to fork and submit PRs!
-
-## License
-
-ISC
-
-## Author
-
-[Your Name] - Portfolio Project
-
----
-
-**Questions?** Open an issue on GitHub!
-
 # 2. Install dependencies
 npm install
 
