@@ -1,4 +1,4 @@
-.loginPage {
+.registerPage {
   justify-self: center;
   flex-direction: column;
   display: flex;
@@ -10,25 +10,25 @@
   color: white;
 }
 
-.loginTitle {
+.registerTitle {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
 }
 
-.loginTitle h1 {
+.registerTitle h1 {
   margin: 0;
   font-size: 28px;
 }
 
-.loginForm form {
+.registerForm form {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 15px;
 }
 
-.loginForm input {
+.registerForm input {
   width: 300px;
   height: 23px;
   border-radius: 5px;
@@ -37,7 +37,7 @@
   font-size: 14px;
 }
 
-.loginForm label {
+.registerForm label {
   font-size: 16px;
   font-weight: bold;
   width: 100%;
@@ -81,17 +81,17 @@
   margin-top: 5px;
 }
 
-.registerLink {
+.loginLink {
   font-size: 14px;
   margin-top: 10px;
 }
 
-.registerLink a {
+.loginLink a {
   color: white;
   text-decoration: underline;
   cursor: pointer;
 }
 
-.registerLink a:hover {
+.loginLink a:hover {
   text-decoration: none;
 }

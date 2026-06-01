@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import styles from "./LoginStyle.module.css";
+import styles from "./RegisterStyle.module.css";
 
-function LoginPage() {
+function RegisterPage() {
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,20 +25,32 @@ function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.email || !formData.password) {
-      setError("all fields are required");
+    // Валідація
+    if (!formData.name || !formData.email || !formData.password) {
+      setError("All fields are required");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long");
       return;
     }
 
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/users/login", {
+      const response = await fetch("http://localhost:5000/api/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          name: formData.name,
           email: formData.email,
           password: formData.password,
         }),
@@ -45,11 +59,11 @@ function LoginPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Error logging in");
+        setError(data.error || "Error registering user");
         return;
       }
 
-      // Successful login
+      // Successful registration
       localStorage.setItem("user", JSON.stringify(data));
       navigate("/");
     } catch (err) {
@@ -61,13 +75,25 @@ function LoginPage() {
   };
 
   return (
-    <div className={styles.loginPage}>
-      <div className={styles.loginTitle}>
-        <h1>Login</h1>
+    <div className={styles.registerPage}>
+      <div className={styles.registerTitle}>
+        <h1>Register</h1>
       </div>
 
-      <div className={styles.loginForm}>
+      <div className={styles.registerForm}>
         <form onSubmit={handleSubmit}>
+          <label htmlFor="name">
+            Name:
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </label>
+
           <label htmlFor="email">
             Email:
             <input
@@ -79,6 +105,7 @@ function LoginPage() {
               required
             />
           </label>
+
           <label htmlFor="password">
             Password:
             <input
@@ -91,14 +118,26 @@ function LoginPage() {
             />
           </label>
 
+          <label htmlFor="confirmPassword">
+            Confirm Password:
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+            />
+          </label>
+
           {error && <div className={styles.error}>{error}</div>}
 
           <button type="submit" disabled={loading} className={styles.submitBtn}>
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Registering..." : "Register"}
           </button>
 
-          <p className={styles.registerLink}>
-            Don't have an account? <Link to="/register">Register</Link>
+          <p className={styles.loginLink}>
+            Already have an account? <Link to="/login">Login</Link>
           </p>
         </form>
       </div>
@@ -106,4 +145,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default RegisterPage;
