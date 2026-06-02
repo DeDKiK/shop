@@ -1,0 +1,77 @@
+# Backend Service
+# Exposes backend pods internally within cluster
+apiVersion: v1
+kind: Service
+metadata:
+  name: shop-backend
+  namespace: shop
+  labels:
+    app: shop
+    component: backend
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 5000
+    targetPort: http
+    protocol: TCP
+  selector:
+    app: shop
+    component: backend
+
+---
+
+# MongoDB Service
+# Exposes MongoDB pods internally within cluster
+apiVersion: v1
+kind: Service
+metadata:
+  name: shop-mongodb
+  namespace: shop
+  labels:
+    app: shop
+    component: database
+spec:
+  type: ClusterIP
+  ports:
+  - name: mongodb
+    port: 27017
+    targetPort: mongodb
+    protocol: TCP
+  selector:
+    app: shop
+    component: mongodb
+
+---
+
+# Ingress for External Access
+# Routes external traffic to backend (if using Nginx Ingress Controller)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: shop-ingress
+  namespace: shop
+  labels:
+    app: shop
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"  # For HTTPS
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: api.shop.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: shop-backend
+            port:
+              number: 5000
+  
+  # TLS Configuration (requires cert-manager)
+  tls:
+  - hosts:
+    - api.shop.local
+    secretName: shop-api-tls

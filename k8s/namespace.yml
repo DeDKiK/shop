@@ -1,0 +1,9 @@
+# Namespace for Shop Application
+# Isolates all shop resources from other applications
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shop
+  labels:
+    app: shop
+    environment: production
