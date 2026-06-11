@@ -93,14 +93,23 @@ resource "kubernetes_service" "backend" {
     metadata{
         name = "shop-backend-service"
         namespace = kubernetes_namespace.shop-app.metadata[0].name
+        labels = {
+            app = "shop-backend"
+        }
     }
     spec{
         selector = {
             app = "shop-backend"
         }
         port {
-            port = 5000
+            name        = "http"
+            port        = 5000
             target_port = 5000
+        }
+        port {
+          name        = "metrics"
+          port        = 9090
+          target_port = 5000
         }
         type = "ClusterIP"
     }
@@ -185,6 +194,29 @@ resource "kubernetes_deployment" "frontend" {
                 value = "production"
             }
         }
+
+        container {
+          name  = "nginx-exporter"
+          image = "nginx/nginx-prometheus-exporter:1.1.0"
+          args = ["--nginx.scrape-uri=http://localhost/stub_status"]
+
+
+          port {
+            container_port = 9113
+            name = "metrics"
+          }
+
+          resources {
+            limits = {
+              cpu    = "50m"
+              memory = "32Mi"
+            }
+            requests = {
+              cpu    = "10m"
+              memory = "16Mi"
+            }
+          }
+        }
       }
     }
   }
@@ -194,14 +226,23 @@ resource "kubernetes_service" "frontend" {
     metadata{
         name = "shop-frontend-service"
         namespace = kubernetes_namespace.shop-app.metadata[0].name
+        labels = {
+            app = "shop-frontend"
+        }
     }
     spec{
         selector = {
             app = "shop-frontend"
         }
         port {
-            port = 80
+            name        = "http"
+            port        = 80
             target_port = 80
+        }
+        port {
+          name        = "metrics"
+          port        = 9113
+          target_port = 9113
         }
         type = "ClusterIP"
     }
