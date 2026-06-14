@@ -1,0 +1,30 @@
+# terraform.tfvars.example
+
+# ── cluster ──────────────────────────
+cluster_name       = "shop-cluster"
+kubernetes_version = "v1.30.0"
+cluster_cpus       = 4
+cluster_memory     = "8192mb"
+cluster_disk_size  = "30gb"
+
+# ── application ───────────────────────────────────────────────────
+namespace         = "shop"
+backend_image     = "shop-backend:latest"
+frontend_image    = "shop-frontend:latest"
+backend_replicas  = 2
+frontend_replicas = 2
+
+# ── MongoDB — SENSITIVE ───────────────────────────────────────
+# For local without auth:
+# mongo_uri = "mongodb://mongo-service:27017/shop"
+# With auth 
+# mongo_uri = "mongodb://admin:PASSWORD@mongo-service:27017/shop?authSource=admin"
+
+mongo_storage_size = "5Gi"
+
+# ── monitoring — SENSITIVE ────────────────────────────────────
+monitoring_namespace     = "monitoring"
+prometheus_chart_version = "65.1.1"
+
+# Change to a real password:
+grafana_admin_password = "Change to a real password"
