@@ -19,7 +19,7 @@ const httpRequestDuration = new promClient.Histogram({
 });
 
 const httpRequestTotal = new promClient.Counter({
-  name: 'shop_backend_http_request_total',
+  name: 'shop_backend_http_requests_total',
   help: 'Total number of HTTP requests',
   labelNames: ['method', 'route', 'status_code']
 });

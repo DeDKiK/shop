@@ -1,0 +1,44 @@
+# ConfigMap for Shop Backend Application
+# Contains non-sensitive configuration data ONLY
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shop-backend-config
+  namespace: shop
+  labels:
+    app: shop
+    component: backend
+    tier: application
+    version: v1
+data:
+  # MongoDB Configuration (no credentials here!)
+  MONGODB_HOST: "shop-mongodb.shop.svc.cluster.local"
+  MONGODB_PORT: "27017"
+  MONGODB_DB: "shop"
+
+  # Application Configuration
+  PORT: "5000"
+  NODE_ENV: "production"
+  LOG_LEVEL: "info"
+
+---
+
+# Secret for Shop Backend Application
+# In production use Sealed Secrets or external secrets manager
+# https://github.com/bitnami-labs/sealed-secrets
+apiVersion: v1
+kind: Secret
+metadata:
+  name: shop-backend-secret
+  namespace: shop
+  labels:
+    app: shop
+    component: backend
+    tier: secrets
+    version: v1
+type: Opaque
+data:
+  # Base64 encoded credentials
+  # Generate: echo -n "yourvalue" | base64
+  MONGODB_USER: cm9vdA==        # root
+  MONGODB_PASSWORD: cGFzc3dvcmQ=  # password  ← change before production!

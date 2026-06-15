@@ -12,7 +12,7 @@ variable "kubernetes_version" {
   default     = "v1.30.0"
 }
 
-variable "clusrer_cpus" {
+variable "cluster_cpus" {
   description = "The number of CPUs to allocate to the Minikube cluster"
   type        = number
   default     = 4

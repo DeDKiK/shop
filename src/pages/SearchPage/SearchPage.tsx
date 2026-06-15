@@ -3,7 +3,7 @@ import { items } from "../../AppComponents/items";
 import ItemCard from "../../AppComponents/itemCard/itemCard";
 import styles from "../HomePage/homePageStyle.module.css";
 
-function searchPage() {
+function SearchPage() {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
 
@@ -32,4 +32,4 @@ function searchPage() {
   );
 }
 
-export default searchPage;
+export default SearchPage;
