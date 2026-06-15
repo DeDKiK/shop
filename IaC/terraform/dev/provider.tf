@@ -10,5 +10,3 @@ provider "helm" {
     config_context = var.cluster_name
   }
 }
-
-provider "time" {}

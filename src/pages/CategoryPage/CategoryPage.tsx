@@ -3,7 +3,7 @@ import { items } from "../../AppComponents/items";
 import ItemCard from "../../AppComponents/itemCard/itemCard";
 import styles from "../HomePage/homePageStyle.module.css";
 
-export default function categoryPage() {
+export default function CategoryPage() {
   const { category } = useParams<{ category: string }>();
 
   const filteredItems = items.filter(
