@@ -73,7 +73,7 @@ jobs:
 
 
   deploy:
-    needs: test
+    needs: docker
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
