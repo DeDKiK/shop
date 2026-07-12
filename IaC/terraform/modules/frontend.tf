@@ -29,7 +29,7 @@ resource "kubernetes_deployment" "frontend" {
 
           resources {
             limits   = { cpu = "300m", memory = "256Mi" }
-            requests = { cpu = "50m",  memory = "64Mi" }
+            requests = { cpu = "50m", memory = "64Mi" }
           }
 
 
@@ -70,17 +70,17 @@ resource "kubernetes_deployment" "frontend" {
           args = ["--nginx.scrape-uri=http://localhost/stub_status"]
 
           port {
-            name           = "metrics" 
+            name           = "metrics"
             container_port = 9113
           }
 
-          
+
           resources {
-            limits   = { cpu = "50m",  memory = "32Mi" }
-            requests = { cpu = "10m",  memory = "16Mi" }
+            limits   = { cpu = "50m", memory = "32Mi" }
+            requests = { cpu = "10m", memory = "16Mi" }
           }
 
-          
+
           readiness_probe {
             http_get {
               path = "/metrics"
@@ -103,7 +103,7 @@ resource "kubernetes_service" "frontend" {
   metadata {
     name      = "shop-frontend-service"
     namespace = kubernetes_namespace.shop.metadata[0].name
-    labels    = { app = "shop-frontend" } 
+    labels    = { app = "shop-frontend" }
   }
 
   spec {
@@ -117,8 +117,8 @@ resource "kubernetes_service" "frontend" {
 
     port {
       name        = "metrics"
-      port        = 9113        
-      target_port = 9113        
+      port        = 9113
+      target_port = 9113
     }
 
     type = "ClusterIP"

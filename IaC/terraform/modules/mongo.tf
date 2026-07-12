@@ -59,7 +59,7 @@ resource "kubernetes_deployment" "mongo" {
             exec {
               command = ["mongosh", "--eval", "db.adminCommand('ping')"]
             }
-            initial_delay_seconds = 30 
+            initial_delay_seconds = 30
             period_seconds        = 15
             timeout_seconds       = 10
             failure_threshold     = 3

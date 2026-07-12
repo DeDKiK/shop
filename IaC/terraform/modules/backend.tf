@@ -21,7 +21,7 @@ resource "kubernetes_deployment" "backend" {
         container {
           name              = "shop-backend"
           image             = var.backend_image
-          image_pull_policy = "Never" 
+          image_pull_policy = "Never"
 
           port { container_port = 5000 }
 
@@ -46,7 +46,7 @@ resource "kubernetes_deployment" "backend" {
             value = "production"
           }
 
-       
+
           env {
             name  = "PORT"
             value = "5000"
@@ -58,7 +58,7 @@ resource "kubernetes_deployment" "backend" {
               path = "/api/health"
               port = 5000
             }
-            initial_delay_seconds = 45 
+            initial_delay_seconds = 45
             period_seconds        = 10
             timeout_seconds       = 5
             failure_threshold     = 3
@@ -85,7 +85,7 @@ resource "kubernetes_service" "backend" {
   metadata {
     name      = "shop-backend-service"
     namespace = kubernetes_namespace.shop.metadata[0].name
-    labels    = { app = "shop-backend" } 
+    labels    = { app = "shop-backend" }
   }
 
   spec {
@@ -99,8 +99,8 @@ resource "kubernetes_service" "backend" {
 
     port {
       name        = "metrics"
-      port        = 9090        
-      target_port = 5000        
+      port        = 9090
+      target_port = 5000
     }
 
     type = "ClusterIP"

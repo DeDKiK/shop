@@ -11,23 +11,23 @@ module "shop_app" {
   mongo_uri          = var.mongo_uri
   mongo_storage_size = var.mongo_storage_size
 
-  
+
 }
 
 resource "helm_release" "prometheus_stack" {
-  name = "prometheus"
+  name             = "prometheus"
   repository       = "https://prometheus-community.github.io/helm-charts"
-  chart = "kube-prometheus-stack"
-  namespace = var.monitoring_namespace
+  chart            = "kube-prometheus-stack"
+  namespace        = var.monitoring_namespace
   create_namespace = true
-  version = var.prometheus_chart_version
+  version          = var.prometheus_chart_version
 
   timeout = 600
 
   wait = true
 
-  
-  
+
+
   values = [
     yamlencode({
       grafana = {

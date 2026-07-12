@@ -6,7 +6,7 @@ resource "kubernetes_manifest" "frontend_service_monitor" {
       name      = "shop-frontend-service-monitor"
       namespace = var.monitoring_namespace
       labels = {
-        release = helm_release.prometheus_stack.name  
+        release = helm_release.prometheus_stack.name
       }
     }
     spec = {
@@ -28,7 +28,7 @@ resource "kubernetes_manifest" "frontend_service_monitor" {
     }
   }
 
-  depends_on = [helm_release.prometheus_stack]  
+  depends_on = [helm_release.prometheus_stack]
 }
 
 resource "kubernetes_manifest" "backend_service_monitor" {
@@ -39,7 +39,7 @@ resource "kubernetes_manifest" "backend_service_monitor" {
       name      = "shop-backend-service-monitor"
       namespace = var.monitoring_namespace
       labels = {
-        release = helm_release.prometheus_stack.name  
+        release = helm_release.prometheus_stack.name
       }
     }
     spec = {
@@ -61,7 +61,7 @@ resource "kubernetes_manifest" "backend_service_monitor" {
     }
   }
 
-  depends_on = [helm_release.prometheus_stack]  
+  depends_on = [helm_release.prometheus_stack]
 }
 
 resource "kubernetes_config_map" "grafana_dashboard" {
@@ -73,7 +73,7 @@ resource "kubernetes_config_map" "grafana_dashboard" {
     }
   }
 
-  depends_on = [helm_release.prometheus_stack]  
+  depends_on = [helm_release.prometheus_stack]
 
   data = {
     "shop-dashboard.json" = jsonencode({

@@ -67,32 +67,32 @@ variable "frontend_replicas" {
 
 variable "mongo_uri" {
   description = "The connection URI for the MongoDB database"
-  type      = string
-  sensitive = true
+  type        = string
+  sensitive   = true
 }
 
 variable "mongo_storage_size" {
-    description = "The size of the persistent storage for MongoDB"
-    type        = string
-    default     = "5Gi"
+  description = "The size of the persistent storage for MongoDB"
+  type        = string
+  default     = "5Gi"
 }
 
 # Monitoring
 
 variable "monitoring_namespace" {
-    description = "namespace for monitoring tools prometheus and grafana"
-    type        = string
-    default     = "monitoring"
+  description = "namespace for monitoring tools prometheus and grafana"
+  type        = string
+  default     = "monitoring"
 }
 
 variable "grafana_admin_password" {
-    description = "Admin password for Grafana"
-    type        = string
-    sensitive   = true
+  description = "Admin password for Grafana"
+  type        = string
+  sensitive   = true
 }
 
 variable "prometheus_chart_version" {
-    description = "Version of the Prometheus Helm chart"
-    type        = string
-    default     = "65.1.1"
+  description = "Version of the Prometheus Helm chart"
+  type        = string
+  default     = "65.1.1"
 }
