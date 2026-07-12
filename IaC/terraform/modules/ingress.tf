@@ -4,8 +4,8 @@ resource "kubernetes_ingress_v1" "shop" {
     namespace = kubernetes_namespace.shop.metadata[0].name
 
     annotations = {
-      "nginx.ingress.kubernetes.io/use-regex"        = "true"
-      "nginx.ingress.kubernetes.io/proxy-body-size"  = "10m"
+      "nginx.ingress.kubernetes.io/use-regex"          = "true"
+      "nginx.ingress.kubernetes.io/proxy-body-size"    = "10m"
       "nginx.ingress.kubernetes.io/proxy-read-timeout" = "60"
 
     }

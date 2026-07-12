@@ -1,16 +1,16 @@
 output "cluster_name" {
-    value = var.cluster_name
-    description = "The name of the Minikube cluster"
+  value       = var.cluster_name
+  description = "The name of the Minikube cluster"
 }
 
 output "app_namespace" {
-    value = module.shop_app.namespace
-    description = "The Kubernetes namespace for the shop application"
+  value       = module.shop_app.namespace
+  description = "The Kubernetes namespace for the shop application"
 }
 
-output "monitoring_namespace"{
-    value = var.monitoring_namespace
-    description = "The Kubernetes namespace for monitoring tools"
+output "monitoring_namespace" {
+  value       = var.monitoring_namespace
+  description = "The Kubernetes namespace for monitoring tools"
 }
 
 output "access_instructions" {
