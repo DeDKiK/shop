@@ -10,3 +10,14 @@ module "security_groups" {
   vpc_id = module.vpc.vpc_id
   allowed_admin_cidr = "${var.my_ip}/32"
 }
+
+module "ec2_k3s" {
+  source                  = "../modules/ec2-k3s"
+  project_name            = var.project_name
+  instacne_type           = var.instance_type
+  subnet_id               = module.vpc.public_subnet_id
+  security_group_id       = module.security_groups.security_group_id
+  ssh_public_key_path     = var.ssh_public_key_path
+  ssh_private_key_path    = var.ssh_private_key_path
+  kubeconfig_output_path  = var.kubeconfig_output_path
+}
