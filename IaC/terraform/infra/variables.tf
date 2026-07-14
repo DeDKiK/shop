@@ -34,3 +34,13 @@ variable "kubeconfig_output_path" {
   description = "a place to save kubeconfig for AWS-cluster access"
   default     = "~/.kube/shop-aws-config"
 }
+
+variable "agent_count" {
+  type    = number
+  default = 1
+}
+
+variable "agent_instance_type" {
+  type    = string
+  default = "t3.small"
+}

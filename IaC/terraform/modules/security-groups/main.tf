@@ -63,3 +63,34 @@ resource "aws_security_group_rule" "egress_all" {
   security_group_id = aws_security_group.k3s_node.id
   description       = "Allow all outbound traffic"
 }
+
+
+resource "aws_security_group_rule" "vxlan_internal" {
+  type = "ingress"
+  from_port = 8472
+  to_port = 8472
+  protocol = "udp"
+  self = true
+  security_group_id = aws_security_group.k3s_node.id
+  description = "Flannel VXLAN between k3s nodes"
+}
+
+resource "aws_security_group_rule" "kublet_iternal" {
+  type = "ingress"
+  from_port = 10250
+  to_port = 10250
+  protocol = "tcp"
+  self = true
+  security_group_id = aws_security_group.k3s_node.id
+  description = "Kublet API between k3s nodes"
+}
+
+resource "aws_security_group_rule" "k3s_api_iternal" {
+  type = "ingress"
+  from_port = 6443
+  to_port = 6443
+  protocol = "tcp"
+  self = true
+  security_group_id = aws_security_group.k3s_node.id
+  description = "k3s API access for agent nodes joining the cluster"
+}

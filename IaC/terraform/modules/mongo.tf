@@ -13,7 +13,7 @@ resource "kubernetes_persistent_volume_claim" "mongo" {
       requests = { storage = var.mongo_storage_size }
     }
   }
-  wait_until_bound = true
+  wait_until_bound = false
 }
 
 # ── MongoDB Deployment ─────────────────────────────────────────────────────

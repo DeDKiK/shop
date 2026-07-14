@@ -13,3 +13,15 @@ output "ssh_command" {
 output "kubeconfig_path" {
   value = var.kubeconfig_output_path
 }
+
+output "key_name" {
+  value = aws_key_pair.deployer.key_name
+}
+
+output "private_ip" {
+  value = aws_instance.k3s_node.private_ip
+}
+
+output "node_token_path" {
+  value = var.node_token_output_path
+}
