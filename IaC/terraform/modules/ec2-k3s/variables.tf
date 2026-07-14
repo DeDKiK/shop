@@ -36,3 +36,9 @@ variable "kubeconfig_output_path" {
   description = "a place to save kubeconfig for AWS-cluster access"
   default = "~/.kube/shop-aws-config"
 }
+
+variable "context_name" {
+  type        = string
+  description = "name kubectl-context for this cluster"
+  default     = "shop-aws"
+}

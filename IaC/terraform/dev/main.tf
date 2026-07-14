@@ -39,17 +39,40 @@ resource "helm_release" "prometheus_stack" {
             label   = "grafana_dashboard"
           }
         }
+        resources = {
+          requests = { cpu = "50m", memory = "128Mi" }
+          limits   = { cpu = "200m", memory = "256Mi" }
+        }
       }
       prometheus = {
         service = { type = "ClusterIP" }
         prometheusSpec = {
           serviceMonitorSelectorNilUsesHelmValues = false
           serviceMonitorSelector                  = {}
+          retention                               = "1d"
+          retentionSize                           = "300MB"
+          walCompression                          = true
+          resources = {
+            requests = { cpu = "150m", memory = "400Mi" }
+            limits   = { cpu = "500m", memory = "700Mi" }
+          }
         }
       }
       alertmanager = {
         enabled = false
       }
+
+      prometheusOperator = {
+        resources = {
+          requests = { cpu = "50m", memory = "64Mi" }
+          limits   = { cpu = "150m", memory = "128Mi" }
+        }
+      }
+
+      kubeControllerManager = { enabled = false }
+      kubeScheduler         = { enabled = false }
+      kubeProxy             = { enabled = false }
+      kubeEtcd              = { enabled = false }
     })
   ]
 
@@ -57,3 +80,25 @@ resource "helm_release" "prometheus_stack" {
 
 
 
+resource "helm_release" "ingress_nginx" {
+  name             = "ingress-nginx"
+  repository       = "https://kubernetes.github.io/ingress-nginx"
+  chart            = "ingress-nginx"
+  namespace        = "ingress-nginx"
+  create_namespace = true
+  version          = var.ingress_nginx_chart_version
+
+  timeout = 300
+  wait    = true
+
+  values = [
+    yamlencode({
+      controller = {
+        resources = {
+          requests = { cpu = "50m", memory = "90Mi" }
+          limits   = { cpu = "200m", memory = "180Mi" }
+        }
+      }
+    })
+  ]
+}

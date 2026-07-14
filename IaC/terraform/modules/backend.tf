@@ -21,7 +21,7 @@ resource "kubernetes_deployment" "backend" {
         container {
           name              = "shop-backend"
           image             = var.backend_image
-          image_pull_policy = "Never"
+          image_pull_policy = "IfNotPresent"
 
           port { container_port = 5000 }
 

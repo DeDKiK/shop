@@ -96,3 +96,11 @@ variable "prometheus_chart_version" {
   type        = string
   default     = "65.1.1"
 }
+
+# ingress-nginx
+
+variable "ingress_nginx_chart_version" {
+  description = "Version of the ingress-nginx Helm chart"
+  type        = string
+  default     = "4.15.1"
+}

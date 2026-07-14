@@ -90,13 +90,14 @@ resource "null_resource" "fetch_kubeconfig" {
 
   provisioner "local-exec" {
     command = <<-EOT
-    mkdir -p $(dirname ${var.kubeconfig_output_path})
+      mkdir -p $(dirname ${var.kubeconfig_output_path})
       scp -o StrictHostKeyChecking=no -i ${pathexpand(var.ssh_private_key_path)} ubuntu@${aws_eip.k3s.public_ip}:/etc/rancher/k3s/k3s.yaml ${var.kubeconfig_output_path}
       sed -i "s/127.0.0.1/${aws_eip.k3s.public_ip}/" ${var.kubeconfig_output_path}
+      sed -i "s/: default$/: ${var.context_name}/" ${var.kubeconfig_output_path}
       chmod 600 ${var.kubeconfig_output_path}
-      echo "kubeconfig saved: ${var.kubeconfig_output_path}"
+      echo "kubeconfig saved: ${var.kubeconfig_output_path} (context: ${var.context_name})"
     EOT
-    interpreter = [ "bash", "-c" ]
+    interpreter = ["bash", "-c"]
   }
 }
 

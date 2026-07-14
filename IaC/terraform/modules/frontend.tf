@@ -23,7 +23,7 @@ resource "kubernetes_deployment" "frontend" {
         container {
           name              = "shop-frontend"
           image             = var.frontend_image
-          image_pull_policy = "Never"
+          image_pull_policy = "IfNotPresent"
 
           port { container_port = 80 }
 
