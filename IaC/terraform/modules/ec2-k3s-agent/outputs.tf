@@ -1,7 +1,9 @@
 output "agent_private_ips" {
-  value = aws_instance.k3s_agent[*].private_ip
+  description = "Private IP addresses of the k3s agent nodes."
+  value       = aws_instance.k3s_agent[*].private_ip
 }
 
 output "agent_ids" {
-  value = aws_instance.k3s_agent[*].id
+  description = "Instance IDs of the k3s agent nodes."
+  value       = aws_instance.k3s_agent[*].id
 }
