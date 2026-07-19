@@ -4,41 +4,47 @@ Full-stack e-commerce application with **React** + **TypeScript** frontend and *
 
 ## About the Project
 
-A complete e-commerce platform featuring:  
+A complete e-commerce platform featuring:
 - Product listing and management
-- Shopping cart functionality  
+- Shopping cart functionality
 - User authentication (login/registration)
 - Order management
-- Admin dashboard with Mongo Express
 - Responsive design with CSS modules
+- Docker-based local deployment
+- Kubernetes and Terraform support for deployment automation
 
-Built as a learning and portfolio project with modern web stack.
+Built as a learning and portfolio project with a modern web stack.
 
 ## Technologies
 
 ### Frontend
-- React 18
+- React 19
 - TypeScript
 - Webpack + Babel
 - CSS Modules
 - React Router
+- Local storage-based cart state
 
 ### Backend
 - Node.js + Express
 - MongoDB + Mongoose
 - CORS enabled
-- Input validation
+- Request validation with express-validator
+- Prometheus metrics endpoint
 
 ### DevOps
 - Docker & Docker Compose
 - Nginx reverse proxy
-- MongoDB Atlas ready
+- Kubernetes manifests in the k8s folder
+- Terraform infrastructure definitions in the IaC folder
 
 ## Quick Start
 
 ### Prerequisites
 - Docker & Docker Compose
 - Node.js 22+ (for local development)
+- Optional: kubectl for Kubernetes deployment
+- Optional: Terraform for infrastructure provisioning
 
 ### Using Docker (Recommended)
 
@@ -47,7 +53,7 @@ Built as a learning and portfolio project with modern web stack.
 git clone https://github.com/DeDKiK/shop.git
 cd shop
 
-# 2. Create .env file from example
+# 2. Create environment file from example
 cp .env.example .env
 
 # 3. Start all services
@@ -83,20 +89,25 @@ Copy `.env.example` to `.env` and configure:
 
 ```env
 # MongoDB
+MONGODB_URI=mongodb://localhost:27017/shop
+
+# Server
+PORT=5000
+NODE_ENV=development
+```
+
+For Docker Compose, the following variables can also be used:
+
+```env
 MONGO_USER=root
 MONGO_PASSWORD=password
 MONGO_DB=shop
 MONGO_PORT=27017
-
-# Backend
 BACKEND_PORT=5000
-NODE_ENV=development
-
-# Frontend
 FRONTEND_PORT=8080
-
-# Mongo Express
 MONGO_EXPRESS_PORT=8081
+ME_CONFIG_USER=admin
+ME_CONFIG_PASSWORD=admin
 ```
 
 ## API Endpoints
@@ -119,24 +130,44 @@ MONGO_EXPRESS_PORT=8081
 - `POST /api/orders` - Create order
 - `PUT /api/orders/:id` - Update order
 
+### Health and Metrics
+- `GET /api/health` - Backend health check
+- `GET /metrics` - Prometheus metrics
+
+## Frontend Routes
+
+The React application uses client-side routes:
+- `/` or `/home` - Home page
+- `/category/:category` - Category page
+- `/login` - Login page
+- `/register` - Registration page
+- `/cart` - Cart page
+- `/search` - Search page
+
 ## Project Structure
 
-```
+```text
 shop/
 ├── src/                    # React frontend
+│   ├── App.tsx            # Main application router
+│   ├── index.tsx          # React entry point
 │   ├── pages/             # Page components
-│   ├── AppComponents/     # UI components
-│   ├── context/           # React Context
-│   └── assets/            # Static files
+│   ├── AppComponents/     # UI components and shared data
+│   ├── context/           # React contexts (cart state)
+│   ├── assets/            # Static assets
+│   └── style.css          # Global styles
 ├── backend/               # Express API
 │   ├── models/            # Mongoose schemas
 │   ├── routes/            # API routes
-│   ├── server.js          # Main server
+│   ├── server.js          # Main server and metrics setup
 │   └── package.json
-├── webpack/               # Webpack config
-├── docker-compose.yml     # Services
-├── Dockerfile             # Frontend Docker
-└── README.md
+├── webpack/               # Webpack configuration
+├── docker-compose.yml     # Local Docker Compose services
+├── Dockerfile             # Frontend container build
+├── k8s/                   # Kubernetes manifests and deployment files
+├── IaC/                   # Terraform infrastructure code
+├── README.md              # Main project documentation
+└── package.json           # Frontend scripts and dependencies
 ```
 
 ## Testing the Application
@@ -165,7 +196,7 @@ curl -X POST http://localhost:5000/api/products \
 ```
 
 ### 3. Check Mongo Express
-Visit http://localhost:8081 (admin/admin) to view database
+Visit http://localhost:8081 (admin/admin) to view the database.
 
 ## Development Commands
 
@@ -174,6 +205,7 @@ Visit http://localhost:8081 (admin/admin) to view database
 npm start      # Dev server
 npm run build  # Production build
 npm run deploy # Deploy to GitHub Pages
+npm run lint   # Run ESLint checks
 ```
 
 ### Backend
@@ -190,16 +222,28 @@ docker compose down           # Stop all services
 docker compose logs -f        # View logs
 ```
 
+### Kubernetes
+```bash
+kubectl apply -k k8s/
+```
+
+### Terraform
+```bash
+cd IaC/terraform/infra
+terraform init
+terraform apply
+```
+
 ## Troubleshooting
 
 ### MongoDB Connection Error
-If backend can't connect to MongoDB:
-- Ensure MongoDB service is running: `docker compose ps`
-- Check credentials in `.env`
-- Verify `authSource=admin` in connection string
+If the backend cannot connect to MongoDB:
+- Ensure the MongoDB service is running: `docker compose ps`
+- Check credentials in `.env` or Docker environment variables
+- Verify that the MongoDB URI includes `authSource=admin` when needed
 
 ### Port Already in Use
-Change ports in `.env`:
+Change ports in `.env` or in the Docker Compose environment:
 ```env
 FRONTEND_PORT=3000
 BACKEND_PORT=3001
@@ -212,25 +256,3 @@ Clean and rebuild:
 docker compose down -v
 docker compose up --build
 ```
-
-## Contributing
-
-Feel free to fork and submit PRs!
-
-## License
-
-ISC
-
-## Author
-
-[Your Name] - Portfolio Project
-
----
-
-**Questions?** Open an issue on GitHub!
-
-# 2. Install dependencies
-npm install
-
-# 3. Start development server
-npm start

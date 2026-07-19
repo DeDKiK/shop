@@ -1,16 +1,16 @@
 output "cluster_name" {
+  description = "The name of the local Kubernetes cluster."
   value       = var.cluster_name
-  description = "The name of the Minikube cluster"
 }
 
 output "app_namespace" {
+  description = "The Kubernetes namespace for the shop application."
   value       = module.shop_app.namespace
-  description = "The Kubernetes namespace for the shop application"
 }
 
 output "monitoring_namespace" {
+  description = "The Kubernetes namespace for monitoring tools."
   value       = var.monitoring_namespace
-  description = "The Kubernetes namespace for monitoring tools"
 }
 
 output "access_instructions" {
@@ -29,7 +29,7 @@ output "access_instructions" {
        kubectl -n ${var.monitoring_namespace} port-forward \
          svc/prometheus-grafana 3000:80
        http://localhost:3000
-       login: admin / <grafana_admin_password з tfvars>
+       login: admin / <value of grafana_admin_password from tfvars>
 
      Prometheus (port-forward):
        kubectl -n ${var.monitoring_namespace} port-forward \
