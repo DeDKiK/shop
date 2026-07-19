@@ -1,19 +1,21 @@
 # Troubleshooting Log — Minikube + Terraform + Kubernetes + Helm
 
-This document records real issues encountered while refactoring the Terraform
-configuration for the `shop` project's local development environment
-(Minikube cluster, Kubernetes resources, and a `kube-prometheus-stack`
-monitoring stack via Helm).
+Real issues encountered while building and refactoring the `shop` project's local infrastructure: Minikube cluster provisioning, Terraform state management, Docker networking on a rootless setup, and Helm / Kubernetes provider quirks.
 
-Most of these issues are not "wrong Terraform code" in the traditional sense —
-they are mismatches between Terraform's expectations and the quirks of a
-specific local environment: provider bugs, state drift, and Docker networking
-on a rootless setup. This kind of debugging is a normal (and large) part of
-real infrastructure work, so it's documented here as a reference.
+These are not abstract examples — every entry below is something that actually broke and required investigation to fix. The goal of keeping this log is to show that infrastructure work involves a lot of debugging, and that knowing *how* to recover from failures is as important as writing the initial configuration.
 
 ---
 
-## 1. HCL Syntax Errors (Manual Editing)
+## Table of Contents
+
+1. [HCL Syntax Errors](#1-hcl-syntax-errors)
+2. [Minikube Provider certSANs Bug](#2-minikube-provider-certsans-bug)
+3. [Terraform State vs. Reality Drift](#3-terraform-state-vs-reality-drift)
+4. [Runtime Issues After Cluster Recreation](#4-runtime-issues-after-cluster-recreation)
+
+---
+
+## 1. HCL Syntax Errors
 
 ### 1.1 `set {}` blocks outside `helm_release`
 
@@ -23,14 +25,10 @@ Unexpected block: Blocks of type "set" are not expected here
 ```
 
 **Cause**
-The closing brace of the `helm_release` resource ended up earlier than
-intended, leaving several `set {}` blocks declared at the top level of the
-file instead of inside the resource.
+The closing brace of a `helm_release` resource ended up in the wrong place during manual editing. Several `set {}` blocks were left declared at the file's top level instead of inside the resource body.
 
 **Fix**
-Replaced all `set {}` blocks with a single `values = [yamlencode({...})]`
-block. One nested HCL object is much harder to misplace than ten separate
-`set` blocks.
+Replaced all `set {}` blocks with a single `values = [yamlencode({...})]` block. One nested HCL object is harder to accidentally misplace than ten separate `set` blocks, and produces cleaner diffs in version control.
 
 ---
 
@@ -42,14 +40,22 @@ Unexpected attribute: An attribute named "namespace" is not expected here
 ```
 
 **Cause**
-`modules/variables.tf` was missing or incomplete. A module has **no implicit
-access** to the parent module's variables — every input must be explicitly
-declared with `variable {}` inside the module itself.
+`modules/variables.tf` was missing. A child module has no implicit access to the parent module's variables — every input must be explicitly declared with a `variable {}` block inside the module itself.
 
 **Fix**
-Declared all expected inputs (`namespace`, `backend_image`, `frontend_image`,
-`backend_replicas`, `frontend_replicas`, `mongo_uri`, `mongo_storage_size`) in
-`modules/variables.tf`.
+Added all expected inputs to `modules/variables.tf`:
+```hcl
+variable "namespace"          { type = string }
+variable "backend_image"      { type = string }
+variable "frontend_image"     { type = string }
+variable "backend_replicas"   { type = number }
+variable "frontend_replicas"  { type = number }
+variable "mongo_storage_size" { type = string }
+variable "mongo_uri" {
+  type      = string
+  sensitive = true
+}
+```
 
 ---
 
@@ -62,17 +68,23 @@ string required, but have tuple.
 ```
 
 **Cause**
-`data` in `kubernetes_config_map` is `map(string)` — every value must be a
-string. The Grafana dashboard definition was written as a raw HCL object
-directly under `data`, instead of being encoded as JSON text.
+The `data` attribute in `kubernetes_config_map` is `map(string)` — every value must be a plain string. The Grafana dashboard JSON was written as a raw HCL object directly under `data` instead of being serialised to a string first.
 
 **Fix**
-Wrapped the entire dashboard definition in `jsonencode({...})` under a single
-key, `"shop-dashboard.json"`.
+Wrapped the dashboard definition in `jsonencode({...})` under a single key:
+
+```hcl
+data = {
+  "shop-dashboard.json" = jsonencode({
+    title  = "Shop Application"
+    panels = [ ... ]
+  })
+}
+```
 
 ---
 
-## 2. Minikube Provider `certSANs` Bug
+## 2. Minikube Provider certSANs Bug
 
 **Error**
 ```
@@ -81,18 +93,14 @@ DNS label or a DNS label with subdomain wildcards...
 ```
 
 **Root cause**
-The `scott-the-programmer/minikube` provider (`~> 0.4.x`) generates a
-`kubeadm.yaml` with an **empty `certSANs` entry**, which `kubeadm init`
-rejects outright. This is a provider bug, not a configuration mistake.
+The `scott-the-programmer/minikube` Terraform provider (`~> 0.4.x`) generates a `kubeadm.yaml` with an **empty `certSANs` entry**, which `kubeadm init` rejects. This is a provider bug, not a configuration mistake.
 
-**Attempted fixes that did *not* work**
+**Attempted fixes that did not work**
 - Removing `apiserver_name = "minikubeCA"`
 - Explicitly setting `apiserver_ips = ["127.0.0.1"]`
 
 **Working fix**
-Removed the `minikube_cluster` resource and the `minikube` / `time`
-providers from Terraform entirely. The cluster is now created and managed
-manually:
+Removed the `minikube_cluster` resource and the `minikube` / `time` providers from Terraform entirely. The cluster is now created with the Minikube CLI directly:
 
 ```bash
 minikube start \
@@ -105,44 +113,43 @@ minikube start \
   --kubernetes-version v1.30.0
 ```
 
-Terraform now manages only the Kubernetes and Helm resources *inside* the
-cluster.
+Terraform now manages only the Kubernetes and Helm resources *inside* the already-running cluster.
 
 **Takeaway**
-For local Minikube setups, letting the Minikube CLI own the cluster lifecycle
-is often more reliable than going through a Terraform provider — the CLI is
-far more actively maintained than a niche provider.
+For local Minikube setups, letting the Minikube CLI own the cluster lifecycle is more reliable than going through a Terraform provider. The CLI is actively maintained; the provider is not. Knowing when to drop a tool in favour of a simpler alternative is a real infrastructure skill.
 
 ---
 
 ## 3. Terraform State vs. Reality Drift
 
-### 3.1 Renamed resources triggering destroy/create
+### 3.1 Renamed resources triggering destroy/recreate
 
 **Symptom**
-`terraform plan` showed `minikube_cluster.shop-cluster`,
-`kubernetes_namespace.shop-app`, and `kubernetes_ingress_v1.shop-ingress` as
-**to be destroyed**, with new-named equivalents (`shop`, `shop`, `shop`)
-**to be created**.
+`terraform plan` showed `minikube_cluster.shop-cluster`, `kubernetes_namespace.shop-app`, and `kubernetes_ingress_v1.shop-ingress` as **to be destroyed**, with new equivalents **to be created**.
 
 **Cause**
-The resources were renamed in code (`shop-cluster` → `shop`, `shop-app` →
-`shop`, `shop-ingress` → `shop`). By default, Terraform treats a rename as
-*delete the old resource, create a new one* — and destroying a namespace
-deletes everything inside it.
+Resources were renamed in code (e.g. `shop-app` → `shop`). Terraform treats a rename as *delete old, create new* — and destroying a namespace deletes everything inside it.
 
 **Fix**
 ```bash
-terraform state mv 'minikube_cluster.shop-cluster' 'minikube_cluster.shop'
-terraform state mv 'module.shop_app.kubernetes_namespace.shop-app' 'module.shop_app.kubernetes_namespace.shop'
-terraform state mv 'module.shop_app.kubernetes_ingress_v1.shop-ingress' 'module.shop_app.kubernetes_ingress_v1.shop'
+terraform state mv \
+  'minikube_cluster.shop-cluster' \
+  'minikube_cluster.shop'
+
+terraform state mv \
+  'module.shop_app.kubernetes_namespace.shop-app' \
+  'module.shop_app.kubernetes_namespace.shop'
+
+terraform state mv \
+  'module.shop_app.kubernetes_ingress_v1.shop-ingress' \
+  'module.shop_app.kubernetes_ingress_v1.shop'
 ```
-`state mv` renames the resource *in state* without touching real
-infrastructure.
+
+`state mv` renames the resource in state without touching real infrastructure.
 
 ---
 
-### 3.2 `EOF` errors / unreachable cluster
+### 3.2 EOF errors / unreachable cluster
 
 **Error**
 ```
@@ -150,8 +157,7 @@ Get "https://127.0.0.1:PORT/api/v1/namespaces/shop": EOF
 ```
 
 **Cause**
-The Minikube cluster was stopped (`minikube status` → `Stopped`), so the
-Kubernetes API server wasn't responding to the provider at all.
+The Minikube cluster was stopped (`minikube status` → `Stopped`), so the Kubernetes API server was not responding.
 
 **Fix**
 ```bash
@@ -170,18 +176,14 @@ a provider named registry.terraform.io/hashicorp/minikube
 ```
 
 **Cause**
-After removing the `minikube_cluster` resource (see §2), `outputs.tf` still
-referenced `minikube_cluster.shop.cluster_name`. Terraform inferred a
-provider requirement from this dangling reference and resolved it to the
-wrong registry namespace (`hashicorp/minikube`, which doesn't exist — the
-correct one is `scott-the-programmer/minikube`).
+After removing the `minikube_cluster` resource, `outputs.tf` still referenced `minikube_cluster.shop.cluster_name`. Terraform inferred a provider requirement from this dangling reference, resolving it to the wrong registry namespace (`hashicorp/minikube` does not exist — the correct one is `scott-the-programmer/minikube`).
 
 **Fix**
 Replaced the reference with `var.cluster_name`.
 
 ---
 
-### 3.4 "already exists" after an interrupted `apply`
+### 3.4 "already exists" after a cancelled apply
 
 **Error**
 ```
@@ -190,22 +192,23 @@ Error: namespaces "shop" already exists
 ```
 
 **Cause**
-A previous `terraform apply` was cancelled (Ctrl+C) mid-run. By that point it
-had already sent create requests to Kubernetes and Helm — the `shop`
-namespace and the `prometheus` Helm release existed in the cluster — but the
-cancellation happened before Terraform recorded them in state.
+A previous `terraform apply` was cancelled mid-run (Ctrl+C). Terraform had already sent create requests to Kubernetes and Helm — the `shop` namespace and `prometheus` Helm release existed in the cluster — but the cancellation happened before Terraform recorded them in state. The next `apply` tried to create them again.
 
 **Fix**
 ```bash
 helm uninstall prometheus -n monitoring
 kubectl delete namespace shop
 ```
-Then a clean `apply` from an empty, accurate state.
+
+Then a clean `apply` from an accurate, empty state.
 
 **Lesson**
-Avoid cancelling `apply` mid-run when possible. If you must, verify the
-*actual* cluster state afterward (`kubectl get ns`, `helm list -A`) — not
-just `terraform state list`.
+Avoid cancelling `apply` mid-run. If you must, always verify the *actual* cluster state afterward — not just `terraform state list`:
+
+```bash
+kubectl get ns
+helm list -A
+```
 
 ---
 
@@ -223,11 +226,7 @@ New Identity:     cty.ObjectVal(map[string]cty.Value{"api_version":
 ```
 
 **Cause**
-A bug in `hashicorp/kubernetes` provider `2.38.0`'s "resource identity"
-feature. `terraform import` stores the identity fields as `null`; the next
-`read` returns the real values from the cluster, and the provider treats this
-as an illegal change rather than a normal population of previously-unknown
-data.
+A bug in `hashicorp/kubernetes` provider `2.38.0`. The `terraform import` command stores identity fields as `null`; the next `read` returns real values from the cluster, and the provider treats this as an illegal change rather than a normal initial population.
 
 **Fix**
 ```bash
@@ -235,8 +234,8 @@ terraform state rm 'module.shop_app.kubernetes_deployment.backend'
 terraform state rm 'module.shop_app.kubernetes_deployment.frontend'
 kubectl delete deployment shop-backend shop-frontend -n shop
 ```
-Then let Terraform `create` the resources normally (not `import`) — a fresh
-`create` populates identity correctly from the start.
+
+Then let Terraform `create` the resources from scratch — a fresh `create` populates the identity fields correctly from the start.
 
 ---
 
@@ -250,84 +249,87 @@ Error: Waiting for rollout to finish: 2 replicas wanted; 0 replicas Ready
 ```
 
 **Cause**
-`image_pull_policy = "Never"` requires the image to already exist in
-Minikube's *internal* Docker daemon. After deleting and recreating the
-Minikube VM, that daemon was empty — pods failed with `ErrImageNeverPull`,
-so the rollout never reached `Ready`.
+`image_pull_policy = "Never"` requires the image to exist in Minikube's *internal* Docker daemon. After deleting and recreating the Minikube VM, that daemon was empty — pods failed with `ErrImageNeverPull`.
 
 **Fix**
 ```bash
+# Point shell at Minikube's Docker daemon
 eval $(minikube docker-env -p shop-cluster)
+
+# Rebuild images inside it
 docker build -t shop-backend:latest ./backend
-docker build -t shop-frontend:latest ./frontend
+docker build -t shop-frontend:latest .
 ```
+
+This is a required step any time the Minikube VM is recreated.
 
 ---
 
 ### 4.2 `minikube tunnel` vs `minikube ip` confusion
 
 **Issue**
-`minikube tunnel` does **not** print an IP address — it's a long-running
-foreground process (primarily for `LoadBalancer`-type services). The node IP
-comes from a different, separate command.
+`minikube tunnel` does **not** print an IP address — it is a long-running foreground process intended for `LoadBalancer`-type services. The node IP comes from a different command.
 
-**Fix**
+**Correct commands**
 ```bash
-minikube ip -p shop-cluster
+minikube ip -p shop-cluster     # prints the node IP
+minikube tunnel -p shop-cluster # exposes LoadBalancer services (blocks terminal)
 ```
-`tunnel` and `ip` solve different problems; don't combine them in one step.
 
 ---
 
-### 4.3 Ingress IP unreachable (`Connection timed out`)
+### 4.3 Ingress IP unreachable (rootless Docker)
 
 **Symptom**
 ```bash
-curl http://192.168.49.2
-# Connection timed out
-
-ping -c 3 192.168.49.2
-# 100% packet loss
+curl http://192.168.49.2   # Connection timed out
+ping 192.168.49.2          # 100% packet loss
 ```
-...while `kubectl` worked perfectly against the same cluster.
+
+While `kubectl` worked perfectly against the same cluster.
 
 **Diagnosis**
 ```bash
 ip route get 192.168.49.2
-# routed via the WiFi gateway (10.22.94.67 dev wlp4s0) — not a docker bridge
+# → routed via the WiFi gateway (wlp4s0), not a docker bridge
 
 ip -br addr show
-# no br-xxxxxxxx interface for 192.168.49.0/24 exists at all
+# → no br-xxxxxxxx interface for 192.168.49.0/24
 ```
 
 **Cause**
-Rootless Docker. Container networks aren't exposed to host routing directly —
-only through port-mapped `127.0.0.1:<port>`, which is exactly how `kubectl`
-reaches the API server. The Minikube node's "real" IP (`192.168.49.2`) is
-simply unreachable from the host, by design.
+Rootless Docker. Container networks are not exposed to host routing directly — only through port-mapped `127.0.0.1:<port>`. The Minikube node IP (`192.168.49.2`) is unreachable from the host by design.
 
 **Fix**
+Use `kubectl port-forward` for all local access:
+
 ```bash
-kubectl port-forward -n ingress-nginx svc/ingress-nginx-controller 8080:80
+# Shop app (via Ingress controller)
+kubectl port-forward -n ingress-nginx \
+  svc/ingress-nginx-controller 8080:80
+# → http://localhost:8080
+
+# Grafana
+kubectl -n monitoring port-forward \
+  svc/prometheus-grafana 3000:80
+# → http://localhost:3000
+
+# Prometheus
+kubectl -n monitoring port-forward \
+  svc/prometheus-kube-prometheus-prometheus 9090:9090
+# → http://localhost:9090
 ```
-Then access the app at `http://localhost:8080`. The same approach works for
-Grafana and Prometheus (`kubectl port-forward -n monitoring svc/... <port>:80`).
+
+`kubectl port-forward` is the most portable access method for local clusters — it works regardless of Docker network configuration (rootless or not), unlike direct IP access or `minikube tunnel`.
 
 ---
 
 ## General Lessons
 
-- **State drift recovery tools matter.** `terraform state mv` and
-  `terraform state rm` turned three potentially destructive situations into
-  safe, non-disruptive fixes.
-- **Provider maturity varies wildly.** When a provider behaves
-  inconsistently across versions (the Minikube provider here), the pragmatic
-  fix is often to shrink its scope and let a more mature, dedicated CLI own
-  that part of the stack.
-- **`kubectl port-forward` is the most portable access method** for a local
-  cluster — it works regardless of the underlying Docker network
-  configuration (rootless or not), unlike direct IP access or `minikube
-  tunnel`.
-- **Interrupting `apply` has real consequences.** Cancelling mid-run can
-  leave the cluster and Terraform state out of sync in ways that produce
-  confusing "already exists" errors later.
+**State drift recovery tools matter.** `terraform state mv` and `terraform state rm` turned three potentially destructive situations into safe, non-disruptive fixes. Knowing these commands before you need them is important.
+
+**Provider maturity varies.** When a provider behaves inconsistently, the pragmatic fix is often to shrink its scope and let a more mature, dedicated CLI own that part of the stack. Recognising this trade-off early saves time.
+
+**Interrupting `apply` has real consequences.** A cancelled mid-run `apply` can leave cluster state and Terraform state out of sync in ways that produce confusing errors later. Always verify both sides.
+
+**`kubectl port-forward` is the safest local access method.** It works in any networking configuration. Save `minikube tunnel` for `LoadBalancer` services specifically.

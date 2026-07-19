@@ -78,9 +78,6 @@ NODE_ENV=development
 MongoDB is included in docker-compose.yml:
 - **Host**: `mongodb` (in Docker) or `localhost`
 - **Port**: 27017
-- **User**: root
-- **Password**: password
-- **Database**: shop
 
 View data in Mongo Express: http://localhost:8081
 
@@ -209,7 +206,6 @@ docker compose up --build
 ## Support
 
 - Check [main README](../README.md) for full project info
-- See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines
 
 ---
 
