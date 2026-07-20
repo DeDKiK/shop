@@ -1,0 +1,20 @@
+---
+- name: Install and configure k3s server
+  hosts: k3s_server
+  become: true
+  roles:
+    - k3s_common
+    - k3s_server
+
+- name: Fetch kubeconfig and node-token
+  hosts: k3s_server
+  become: true
+  roles:
+    - kubeconfig_fetch
+
+- name: Install and join k3s agents
+  hosts: k3s_agents
+  become: true
+  roles:
+    - k3s_common
+    - k3s_agent

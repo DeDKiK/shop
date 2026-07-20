@@ -32,3 +32,8 @@ output "node_token_path" {
   description = "Path to the generated k3s node token file."
   value       = module.ec2_k3s.node_token_path
 }
+
+output "agent_public_ips" {
+  description = "Public IP addresses of the k3s agent nodes."
+  value       = module.ec2_k3s_agent.agent_public_ips
+}

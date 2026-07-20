@@ -24,6 +24,17 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Secrets and local credentials
+*.pem
+*.key
+*.pub
+*.pfx
+*.crt
+*.cer
+.kube/
+*.kubeconfig
+*node-token*
+
 # Docker
 .docker/
 docker-compose.override.yml

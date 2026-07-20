@@ -1,0 +1,17 @@
+---
+- name: Run k3s agent install script
+  ansible.builtin.command:
+    cmd: "{{ k3s_install_script }}"
+    creates: /etc/systemd/system/k3s-agent.service
+  environment:
+    K3S_URL: "https://{{ k3s_server_ip }}:6443"
+    K3S_TOKEN: "{{ k3s_token }}"
+
+- name: Wait for agent service to be active
+  ansible.builtin.command:
+    cmd: systemctl is-active k3s-agent
+  register: agent_status
+  until: agent_status.stdout == "active"
+  retries: 12
+  delay: 10
+  changed_when: false

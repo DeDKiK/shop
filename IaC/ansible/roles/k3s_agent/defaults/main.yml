@@ -1,0 +1,2 @@
+k3s_server_ip: "{{ hostvars['k3s_master']['private_ip'] }}"
+k3s_token: "{{ lookup('file', '~/.kube/shop-aws-node-token') }}"
