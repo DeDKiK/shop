@@ -1,0 +1,42 @@
+---
+- name: Fetch kubeconfig from remote host
+  ansible.builtin.fetch:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: "{{ kubeconfig_local_path }}"
+    flat: true
+
+- name: Point kubeconfig at the public IP instead of localhost
+  ansible.builtin.replace:
+    path: "{{ kubeconfig_local_path }}"
+    regexp: '127\.0\.0\.1'
+    replace: "{{ ansible_host }}"
+  delegate_to: localhost
+  become: false
+
+- name: Rename context to something recognisable
+  ansible.builtin.replace:
+    path: "{{ kubeconfig_local_path }}"
+    regexp: ': default$'
+    replace: ": {{ k3s_context_name }}"
+  delegate_to: localhost
+  become: false
+
+- name: Lock down kubeconfig permissions
+  ansible.builtin.file:
+    path: "{{ kubeconfig_local_path }}"
+    mode: '0600'
+  delegate_to: localhost
+  become: false
+
+- name: Fetch node-token from remote host
+  ansible.builtin.fetch:
+    src: /var/lib/rancher/k3s/server/node-token
+    dest: "{{ node_token_local_path }}"
+    flat: true
+
+- name: Lock down node-token permissions
+  ansible.builtin.file:
+    path: "{{ node_token_local_path }}"
+    mode: '0600'
+  delegate_to: localhost
+  become: false

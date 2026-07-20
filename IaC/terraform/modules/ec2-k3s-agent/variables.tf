@@ -27,18 +27,13 @@ variable "key_name" {
   description = "name of existing SSH key pair (from server-module)"
 }
 
-variable "server_private_ip" {
-  type        = string
-  description = "private IP server-node for joining"
-}
-
-variable "k3s_token" {
-  type        = string
-  description = "joining token to k3s-cluster"
-  sensitive   = true
-}
 
 variable "root_volume_size" {
   type    = number
   default = 20
+}
+
+output "agent_public_ips" {
+  description = "Public IP addresses of the k3s agent nodes."
+  value       = aws_instance.k3s_agent[*].public_ip
 }

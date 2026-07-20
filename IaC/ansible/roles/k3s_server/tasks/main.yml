@@ -1,0 +1,14 @@
+---
+- name: Run k3s install script
+  ansible.builtin.command:
+    cmd: "{{ k3s_install_script }} --disable traefik --write-kubeconfig-mode 644 --tls-san {{ ansible_host }}"
+    creates: /etc/rancher/k3s/k3s.yaml
+
+- name: Wait for node to become Ready
+  ansible.builtin.command:
+    cmd: kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml get nodes
+  register: node_status
+  until: "'Ready' in node_status.stdout"
+  retries: 12
+  delay: 10
+  changed_when: false

@@ -22,24 +22,12 @@ module "ec2_k3s" {
   kubeconfig_output_path = var.kubeconfig_output_path
 }
 
-data "local_file" "node_token" {
-  count = fileexists(pathexpand(module.ec2_k3s.node_token_path)) ? 1 : 0
-  filename = pathexpand(module.ec2_k3s.node_token_path)
-  depends_on = [ module.ec2_k3s ]
-}
-
-locals {
-  k3s_token = length(data.local_file.node_token) > 0 ? trimspace(data.local_file.node_token[0].content) : ""
-}
-
 module "ec2_k3s_agent" {
-  source             = "../modules/ec2-k3s-agent"
-  project_name       = var.project_name
-  agent_count        = var.agent_count
-  instance_type      = var.agent_instance_type
-  subnet_id          = module.vpc.public_subnet_id
-  security_group_id  = module.security_groups.security_group_id
-  key_name           = module.ec2_k3s.key_name
-  server_private_ip  = module.ec2_k3s.private_ip
-  k3s_token          = local.k3s_token
+  source            = "../modules/ec2-k3s-agent"
+  project_name      = var.project_name
+  agent_count       = var.agent_count
+  instance_type     = var.agent_instance_type
+  subnet_id         = module.vpc.public_subnet_id
+  security_group_id = module.security_groups.security_group_id
+  key_name          = module.ec2_k3s.key_name
 }

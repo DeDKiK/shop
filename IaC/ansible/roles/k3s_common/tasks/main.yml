@@ -1,0 +1,6 @@
+---
+- name: Download k3s install script
+  ansible.builtin.get_url:
+    url: https://get.k3s.io
+    dest: "{{ k3s_install_script }}"
+    mode: '0755'

@@ -27,10 +27,7 @@ resource "aws_instance" "k3s_agent" {
     volume_size = var.root_volume_size
   }
 
-  user_data = templatefile("${path.module}/user-data.sh.tpl", {
-    server_ip = var.server_private_ip
-    token = var.k3s_token
-  })
+  user_data = file("${path.module}/user-data.sh.tpl")
 
   tags = {
     Name = "${var.project_name}-k3s-agent-${count.index + 1}"

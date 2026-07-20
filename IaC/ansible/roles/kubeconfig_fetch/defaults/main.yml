@@ -1,0 +1,3 @@
+kubeconfig_local_path: ~/.kube/shop-aws-config
+node_token_local_path: ~/.kube/shop-aws-node-token
+k3s_context_name: shop-aws
