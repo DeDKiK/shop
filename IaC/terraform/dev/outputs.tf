@@ -21,9 +21,8 @@ output "access_instructions" {
      Services Access Instructions:
     ═══════════════════════════════════════════════════
 
-     Shop App (through Ingress):
-       minikube -p ${var.cluster_name} tunnel
-       http://$(minikube -p ${var.cluster_name} ip)
+     Shop App (through Ingress, public IP):
+       http://${data.terraform_remote_state.infra.outputs.instance_public_ip}
 
      Grafana (port-forward):
        kubectl -n ${var.monitoring_namespace} port-forward \
