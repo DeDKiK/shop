@@ -1,3 +1,13 @@
+terraform {
+  backend "s3" {
+    bucket         = "shop-tfstate-dedkik-2026"
+    key            = "infra/terraform.tfstate"
+    region         = "eu-central-1"
+    dynamodb_table = "shop-terraform-lock"
+    encrypt        = true
+  }
+}
+
 module "vpc" {
   source       = "../modules/vpc"
   project_name = var.project_name
