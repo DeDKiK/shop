@@ -1,12 +1,9 @@
-
 provider "kubernetes" {
-  config_path    = pathexpand("~/.kube/shop-aws-config")
-  config_context = var.cluster_name
+  config_path = pathexpand("~/.kube/shop-aws-config")
 }
 
 provider "helm" {
   kubernetes {
-    config_path    = pathexpand("~/.kube/shop-aws-config")
-    config_context = var.cluster_name
+    config_path = pathexpand("~/.kube/shop-aws-config")
   }
 }
