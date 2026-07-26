@@ -18,6 +18,9 @@ resource "kubernetes_deployment" "backend" {
       }
 
       spec {
+        image_pull_secrets {
+          name = kubernetes_secret.registry_credentials.metadata[0].name
+        }
         container {
           name              = "shop-backend"
           image             = var.backend_image

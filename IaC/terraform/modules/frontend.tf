@@ -18,7 +18,9 @@ resource "kubernetes_deployment" "frontend" {
       }
 
       spec {
-
+          image_pull_secrets {
+            name = kubernetes_secret.registry_credentials.metadata[0].name
+          }
         # ── main countainer: nginx ──────────────────────────────────────
         container {
           name              = "shop-frontend"

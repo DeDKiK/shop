@@ -9,3 +9,17 @@ variable "mongo_uri" {
   type      = string
   sensitive = true
 }
+variable "registry_server" {
+  type    = string
+  default = "registry.gitlab.com"
+}
+
+variable "registry_username" {
+  type      = string
+  sensitive = true
+}
+
+variable "registry_password" {
+  type      = string
+  sensitive = true
+}

@@ -11,6 +11,9 @@ module "shop_app" {
   mongo_uri          = var.mongo_uri
   mongo_storage_size = var.mongo_storage_size
 
+  registry_server = var.registry_server
+  registry_password = var.registry_password
+  registry_username = var.registry_username
 
 }
 

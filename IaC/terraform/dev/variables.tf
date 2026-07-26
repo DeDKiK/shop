@@ -63,6 +63,26 @@ variable "frontend_replicas" {
   default     = 2
 }
 
+# GitLab Container Registry
+
+variable "registry_server" {
+  description = "The GitLab Container Registry hostname"
+  type        = string
+  default     = "registry.gitlab.com"
+}
+
+variable "registry_username" {
+  description = "Deploy token username for pulling images from the GitLab Container Registry"
+  type        = string
+  sensitive   = true
+}
+
+variable "registry_password" {
+  description = "Deploy token password for pulling images from the GitLab Container Registry"
+  type        = string
+  sensitive   = true
+}
+
 # MongoDB
 
 variable "mongo_uri" {
