@@ -54,5 +54,7 @@ deploy:
       -var="frontend_image=$CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA"
       -var="registry_username=$REGISTRY_DEPLOY_USER"
       -var="registry_password=$REGISTRY_DEPLOY_TOKEN"
+      -var="mongo_uri=$MONGO_URI"
+      -var="grafana_admin_password=$GRAFANA_ADMIN_PASSWORD"
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
