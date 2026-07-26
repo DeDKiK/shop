@@ -1,6 +1,7 @@
 stages:
   - test
   - build
+  - deploy
 
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
@@ -35,3 +36,21 @@ docker:
     - docker push $CI_REGISTRY_IMAGE/frontend:latest
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
+
+deploy: 
+  stage: deploy
+  image: hashicorp/terraform:1.9
+  before_script: 
+    - mkdir -p ~/.kube
+    - cp "$KUBE_CONFIG" ~/.kube/shop-aws-config
+  script:
+    - cd IaC/terraform/dev
+    - terraform init 
+    - >
+      terraform apply -auto-approve
+      -var="backend_image=$CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA"
+      -var="frontend_image=$CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA"
+      -var="registry_username=$REGISTRY_DEPLOY_USER"
+      -var="registry_password=$REGISTRY_DEPLOY_TOKEN"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"' 
