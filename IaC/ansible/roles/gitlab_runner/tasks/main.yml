@@ -1,0 +1,55 @@
+---
+  - name: Install Docker
+    ansible.builtin.apt:
+      name: docker.io
+      state: present
+      update_cache: true
+  
+  - name: ensure docker service is enabled and running
+    ansible.builtin.systemd:
+      name: docker
+      enabled: true
+      state: started
+  
+  - name: add ubuntu user to docker group
+    ansible.builtin.user:
+      name: ubuntu
+      groups: docker
+      append: true
+  
+  - name: download gitlab runner apt repository script
+    ansible.builtin.get_url:
+      url: https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh
+      dest: /tmp/gitlab_runner_repo.sh
+      mode: '0755'
+
+  - name: Add GitLab Runner apt repository
+    ansible.builtin.command:
+      cmd: /tmp/gitlab_runner_repo.sh
+      creates: /etc/apt/sources.list.d/runner_gitlab-runner.list
+
+  - name: install gitlab-runner package
+    ansible.builtin.apt:
+      name: gitlab-runner
+      state: present
+      update_cache: true
+
+  - name: Check if runner is already registered
+    ansible.builtin.command:
+      cmd: grep -q '\[\[runners\]\]' /etc/gitlab-runner/config.toml
+    register: runner_registered
+    changed_when: false
+    failed_when: false
+
+  - name: Register GitLab Runner
+    ansible.builtin.command:
+      cmd: >
+        gitlab-runner register
+        --non-interactive
+        --url "{{ gitlab_runner_url }}"
+        --token "{{ gitlab_runner_token }}"
+        --executor "docker"
+        --docker-image "alpine:latest"
+        --description "{{ gitlab_runner_description }}"
+    when: runner_registered.rc != 0
+          
