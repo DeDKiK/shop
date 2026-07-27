@@ -37,3 +37,13 @@ output "agent_public_ips" {
   description = "Public IP addresses of the k3s agent nodes."
   value       = module.ec2_k3s_agent.agent_public_ips
 }
+
+output "runner_public_ip" {
+  description = "Public IP address of the GitLab Runner instance."
+  value       = module.ec2_gitlab_runner.runner_public_ip
+}
+
+output "runner_private_ip" {
+  description = "Private IP address of the GitLab Runner instance (used to reach k3s API internally)."
+  value       = module.ec2_gitlab_runner.runner_private_ip
+}

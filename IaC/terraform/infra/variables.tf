@@ -44,3 +44,8 @@ variable "agent_instance_type" {
   type    = string
   default = "t3.small"
 }
+
+variable "runner_instance_type" {
+  type = string
+  default = "t3.small"
+}

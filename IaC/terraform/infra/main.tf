@@ -41,3 +41,12 @@ module "ec2_k3s_agent" {
   security_group_id = module.security_groups.security_group_id
   key_name          = module.ec2_k3s.key_name
 }
+
+module "ec2_gitlab_runner" {
+  source = "../modules/ec2-gitlab-runner"
+  project_name = var.project_name
+  instance_type = var.runner_instance_type
+  subnet_id = module.vpc.public_subnet_id
+  security_group_id = module.security_groups.security_group_id
+  key_name = module.ec2_k3s.key_name
+}
