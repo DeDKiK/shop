@@ -67,11 +67,17 @@ module.exports = (env, argv) => {
       },
       port: 8080,
       hot: true,
+      proxy: [
+        {
+          context: ["/api"],
+          target: "http://localhost:5000",
+        },
+      ],
       client: {
         overlay: true,
       },
-      open: true,
-      allowedHosts: "all",
+    open: true,
+    allowedHosts: "all",
     },
     mode: isProduction ? "production" : "development",
     devtool: isProduction ? false : "cheap-module-source-map",
