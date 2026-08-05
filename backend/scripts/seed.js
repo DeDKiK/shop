@@ -12,7 +12,7 @@ function createFakeProduct(){
         name: faker.commerce.productName(),
         description: faker.commerce.productDescription(),
         price: parseFloat(faker.commerce.price({ min: 10, max: 1000, dec: 2 })),
-        category: faker.commerce.department(),
+        category: faker.helpers.arrayElement(['Electronics', 'Clothes']),
         image: faker.image.url({category: 'technics'}),
         stock: faker.number.int({ min: 0 , max: 100})
     }
