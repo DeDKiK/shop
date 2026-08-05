@@ -18,3 +18,9 @@
   roles:
     - k3s_common
     - k3s_agent
+
+- name: Install and register GitLab Runner
+  hosts: gitlab_runner
+  become: true
+  roles:
+    - gitlab_runner

@@ -42,6 +42,8 @@ deploy:
   image:
     name: hashicorp/terraform:1.9
     entrypoint: [""]
+  tags:
+    - aws-vpc
   before_script:
     - mkdir -p ~/.kube
     - cp "$KUBE_CONFIG" ~/.kube/shop-aws-config

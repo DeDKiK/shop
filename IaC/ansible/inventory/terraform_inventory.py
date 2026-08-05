@@ -28,6 +28,7 @@ def build_inventory():
     server_public_ip = outputs["instance_public_ip"]["value"]
     server_private_ip = outputs["instance_private_ip"]["value"]
     agent_public_ips = outputs["agent_public_ips"]["value"]
+    runner_public_ip = outputs["runner_public_ip"]["value"]
 
     hostvars = {
         "k3s_master": {
@@ -40,11 +41,12 @@ def build_inventory():
         name = f"k3s_agent_{i}"
         agent_hosts.append(name)
         hostvars[name] = {"ansible_host": ip}
-
+    hostvars["gitlab_runner_host"] = {"ansible_host": runner_public_ip}
     return {
         "k3s_server": {"hosts": ["k3s_master"]},
         "k3s_agents": {"hosts": agent_hosts},
         "k3s_cluster": {"children": ["k3s_server", "k3s_agents"]},
+        "gitlab_runner": {"hosts": ["gitlab_runner_host"]},
         "_meta": {"hostvars": hostvars},
     }
 
