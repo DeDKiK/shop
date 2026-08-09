@@ -4,7 +4,7 @@ const { faker } = require('@faker-js/faker');
 const Product = require('../models/Product');
 
 
-const PRODUCTS_COUNT = 50;
+const PRODUCTS_COUNT = 500;
 
 
 function createFakeProduct(){

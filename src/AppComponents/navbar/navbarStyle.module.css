@@ -5,6 +5,11 @@
   background: #fff;
   padding: 10px 20px;
   border-bottom: 1px solid #00ca65;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 99%;
+  z-index: 1000;
 }
 
 .navleft,
@@ -12,6 +17,7 @@
   display: flex;
   gap: 15px;
   align-items: center;
+  padding-right: 20px;
 }
 
 /* LINK STYLE */

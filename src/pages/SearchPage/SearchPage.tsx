@@ -1,13 +1,17 @@
 import { useSearchParams } from "react-router-dom";
-import { items } from "../../AppComponents/items";
+import { useProducts } from "../../hooks/useProducts";
 import ItemCard from "../../AppComponents/itemCard/itemCard";
 import styles from "../HomePage/homePageStyle.module.css";
 
 function SearchPage() {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
-
   const decoded = decodeURIComponent(query);
+
+  const { items, loading, error } = useProducts();
+
+  if (loading) return <p>Завантаження...</p>;
+  if (error) return <p>{error}</p>;
 
   const foundItems = items.filter((i) =>
     i.name.toLowerCase().includes(decoded.toLowerCase()),

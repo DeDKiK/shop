@@ -45,7 +45,7 @@ function RegisterPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/users/register", {
+      const response = await fetch("/api/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,71 +76,73 @@ function RegisterPage() {
   };
 
   return (
-    <div className={styles.registerPage}>
-      <div className={styles.registerTitle}>
-        <h1>Register</h1>
-      </div>
+    <div className={styles.registerWrapper}>
+      <div className={styles.registerPage}>
+        <div className={styles.registerTitle}>
+          <h1>Register</h1>
+        </div>
 
-      <div className={styles.registerForm}>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="name">
-            Name:
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </label>
+        <div className={styles.registerForm}>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="name">
+              Name:
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </label>
 
-          <label htmlFor="email">
-            Email:
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </label>
+            <label htmlFor="email">
+              Email:
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </label>
 
-          <label htmlFor="password">
-            Password:
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </label>
+            <label htmlFor="password">
+              Password:
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </label>
 
-          <label htmlFor="confirmPassword">
-            Confirm Password:
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-            />
-          </label>
+            <label htmlFor="confirmPassword">
+              Confirm Password:
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+            </label>
 
-          {error && <div className={styles.error}>{error}</div>}
+            {error && <div className={styles.error}>{error}</div>}
 
-          <button type="submit" disabled={loading} className={styles.submitBtn}>
-            {loading ? "Registering..." : "Register"}
-          </button>
+            <button type="submit" disabled={loading} className={styles.submitBtn}>
+              {loading ? "Registering..." : "Register"}
+            </button>
 
-          <p className={styles.loginLink}>
-            Already have an account? <Link to="/login">Login</Link>
-          </p>
-        </form>
+            <p className={styles.loginLink}>
+              Already have an account? <Link to="/login">Login</Link>
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   );
