@@ -32,7 +32,7 @@ function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/users/login", {
+      const response = await fetch("/api/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,46 +62,48 @@ function LoginPage() {
   };
 
   return (
-    <div className={styles.loginPage}>
-      <div className={styles.loginTitle}>
-        <h1>Login</h1>
-      </div>
+    <div className={styles.loginWrapper}>
+      <div className={styles.loginPage}>
+        <div className={styles.loginTitle}>
+          <h1>Login</h1>
+        </div>
 
-      <div className={styles.loginForm}>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="email">
-            Email:
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </label>
-          <label htmlFor="password">
-            Password:
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </label>
+        <div className={styles.loginForm}>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="email">
+              Email:
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </label>
+            <label htmlFor="password">
+              Password:
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </label>
 
-          {error && <div className={styles.error}>{error}</div>}
+            {error && <div className={styles.error}>{error}</div>}
 
-          <button type="submit" disabled={loading} className={styles.submitBtn}>
-            {loading ? "Logging in..." : "Login"}
-          </button>
+            <button type="submit" disabled={loading} className={styles.submitBtn}>
+              {loading ? "Logging in..." : "Login"}
+            </button>
 
-          <p className={styles.registerLink}>
-            Don't have an account? <Link to="/register">Register</Link>
-          </p>
-        </form>
+            <p className={styles.registerLink}>
+              Don't have an account? <Link to="/register">Register</Link>
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   );
