@@ -19,37 +19,37 @@ Infrastructure is provisioned in two layers:
 ```text
 ┌───────────────────────────────────────────────────────────────┐
 │                      AWS (eu-central-1)                       │
-│                                                                 │
-│   VPC / public subnet / IGW / security groups                  │
-│                                                                 │
+│                                                               │
+│   VPC / public subnet / IGW / security groups                 │
+│                                                               │
 │   ┌──────────────────┐   ┌──────────────────┐   ┌───────────┐ │
 │   │  EC2: k3s server │   │  EC2: k3s agent  │   │  EC2:     │ │
 │   │  (control plane) │◄──┤                  │   │  GitLab   │ │
 │   │  + Elastic IP    │   │                  │   │  Runner   │ │
 │   └────────┬─────────┘   └──────────────────┘   └───────────┘ │
-│            │  k3s cluster (namespace: shop)                    │
-│            ▼                                                   │
-│   ┌──────────────┐    ┌──────────────────┐                     │
-│   │  Frontend    │    │   Backend        │                     │
-│   │  nginx +     │    │   Node.js /      │                     │
-│   │  exporter    │    │   Express        │                     │
-│   └──────┬───────┘    └────────┬─────────┘                     │
-│          │ /metrics             │ /metrics                     │
-│          ▼                      ▼                              │
-│   ┌──────────────────────────────────────┐                     │
-│   │  Prometheus (kube-prometheus-stack)  │                     │
-│   │  ServiceMonitor × 2                  │                     │
-│   └──────────────────┬───────────────────┘                     │
-│                       ▼                                        │
-│   ┌───────────────────────────────┐                            │
-│   │  Grafana + custom dashboard    │                           │
-│   └───────────────────────────────┘                            │
-│                                                                  │
-│   ┌───────────────────────┐                                    │
-│   │  MongoDB (Deployment)  │                                    │
-│   └───────────────────────┘                                    │
-│                                                                  │
-│   nginx Ingress ── routes /api/* → backend, / → frontend        │
+│            │  k3s cluster (namespace: shop)                   │
+│            ▼                                                  │
+│   ┌──────────────┐    ┌──────────────────┐                    │
+│   │  Frontend    │    │   Backend        │                    │
+│   │  nginx +     │    │   Node.js /      │                    │
+│   │  exporter    │    │   Express        │                    │
+│   └──────┬───────┘    └────────┬─────────┘                    │
+│          │ /metrics             │ /metrics                    │
+│          ▼                      ▼                             │
+│   ┌──────────────────────────────────────┐                    │
+│   │  Prometheus (kube-prometheus-stack)  │                    │
+│   │  ServiceMonitor × 2                  │                    │
+│   └──────────────────┬───────────────────┘                    │
+│                       ▼                                       │
+│   ┌───────────────────────────────┐                           │
+│   │  Grafana + custom dashboard    │                          │
+│   └───────────────────────────────┘                           │
+│                                                               │
+│   ┌───────────────────────┐                                   │
+│   │  MongoDB (Deployment)  │                                  │
+│   └───────────────────────┘                                   │
+│                                                               │
+│   nginx Ingress ── routes /api/* → backend, / → frontend      │
 └───────────────────────────────────────────────────────────────┘
 ```
 
