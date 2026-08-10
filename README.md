@@ -42,11 +42,11 @@ Infrastructure is provisioned in two layers:
 │   └──────────────────┬───────────────────┘                    │
 │                       ▼                                       │
 │   ┌───────────────────────────────┐                           │
-│   │  Grafana + custom dashboard    │                          │
+│   │  Grafana + custom dashboard   │                          │
 │   └───────────────────────────────┘                           │
 │                                                               │
 │   ┌───────────────────────┐                                   │
-│   │  MongoDB (Deployment)  │                                  │
+│   │  MongoDB (Deployment) │                                  │
 │   └───────────────────────┘                                   │
 │                                                               │
 │   nginx Ingress ── routes /api/* → backend, / → frontend      │
